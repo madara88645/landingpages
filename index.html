@@ -1,516 +1,407 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeurIQ | AI that adapts to how YOU learn</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif'],
-                    },
-                    colors: {
-                        background: '#050505', 
-                        surface: '#0F0F12', 
-                        primary: '#7C3AED', 
-                        accent: '#A78BFA', 
-                        secondary: '#4C1D95', 
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #050505;
-            color: #E2E8F0; 
-        }
-        .bg-tech-grid {
-            background-size: 50px 50px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-        }
-        .card-hover {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(145deg, rgba(15, 15, 18, 0.6) 0%, rgba(5, 5, 5, 0.8) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-        }
-        .card-hover:hover {
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.15);
-            transform: translateY(-4px);
-            border-color: rgba(124, 58, 237, 0.3);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #C4B5FD, #A78BFA);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
-        }
-        .brain-glow {
-            filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.6));
-        }
-        .bento-inner-glow {
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
-        }
-        /* Perspective for hero image */
-        .perspective-container {
-            perspective: 2000px;
-        }
-        .hero-image-tilt {
-            transform: rotateX(10deg) translateY(0);
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .perspective-container:hover .hero-image-tilt {
-            transform: rotateX(0deg) translateY(-10px);
-        }
-    </style>
-</head>
-<body class="antialiased selection:bg-accent selection:text-white relative overflow-x-hidden">
-
-    <!-- Ambient Background Glows & Grid -->
-    <div class="fixed inset-0 bg-tech-grid -z-20 pointer-events-none"></div>
-    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
-    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
-
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 border-b border-white/[0.03] bg-background/80 backdrop-blur-xl">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
-                <!-- Brain Logo with Dark Purple Glow -->
-                <svg class="w-8 h-8 text-[#A855F7] brain-glow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
-                </svg>
-                NeurIQ
-            </a>
-            <div class="hidden md:flex gap-8 text-sm font-medium">
-                <a href="#about" class="text-slate-400 hover:text-white transition-colors">About</a>
-                <a href="#features" class="text-slate-400 hover:text-white transition-colors">Features</a>
-                <a href="#contact" class="text-slate-400 hover:text-white transition-colors">Contact</a>
-            </div>
-            <a href="#waitlist" class="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-primary hover:bg-violet-700 rounded-full transition-all shadow-[0_0_20px_rgba(124,58,237,0.2)] hover:shadow-[0_0_30px_rgba(124,58,237,0.4)]">
-                Join Beta
-            </a>
-            <!-- Mobile Menu Button -->
-            <button class="md:hidden text-white">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6">
-        <div class="max-w-5xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.1)]">
-                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                Private Beta Opening Soon
-            </div>
-            <h1 class="font-heading text-6xl md:text-8xl font-extrabold text-white tracking-tight mb-6 leading-[1.1]">
-                Learn smarter, <br class="hidden md:block"/>
-                <span class="gradient-text">not harder.</span>
-            </h1>
-            <p class="font-heading text-xl md:text-2xl text-accent mb-4 font-medium tracking-wide">AI that adapts to how YOU learn.</p>
-            <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-                NeurIQ uses advanced cognitive modeling to personalize your learning journey. We match content to your unique processing style, track your progress, and help you master any subject faster.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-                <a href="#waitlist" class="w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-white font-semibold hover:bg-violet-700 transition-all shadow-[0_0_25px_rgba(124,58,237,0.25)] hover:shadow-[0_0_40px_rgba(124,58,237,0.4)]">
-                    Join Private Beta
-                </a>
-                <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all backdrop-blur-sm">
-                    See How It Works
-                </a>
-            </div>
-
-            <!-- Dashboard Mockup Image -->
-            <div class="perspective-container relative mx-auto w-full max-w-5xl">
-                <!-- Inner glow behind image -->
-                <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
-                <div class="hero-image-tilt rounded-2xl md:rounded-3xl border border-white/10 bg-surface/50 p-2 md:p-4 backdrop-blur-sm shadow-2xl">
-                    <img src="./assets/dashboard.PNG" alt="NeurIQ Student Dashboard" class="w-full h-auto rounded-xl md:rounded-2xl border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] opacity-95 hover:opacity-100 transition-opacity" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-24 border-t border-white/[0.02] bg-surface/30">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-2">How It Works</h2>
-                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Discover steps to transform your learning.</h3>
-                <p class="text-slate-400">Forget one-size-fits-all education. NeurIQ maps your cognitive profile to generate interactive quizzes, knowledge maps, and AI tutors tailored specifically to you.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8 relative">
-                <!-- Connective Line (Desktop only) -->
-                <div class="hidden md:block absolute top-12 left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent -z-10"></div>
-
-                <!-- Step 1 -->
-                <div class="relative flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface border border-white/5 flex items-center justify-center mb-6 shadow-2xl relative">
-                        <div class="absolute inset-0 rounded-full border border-primary/20 animate-ping opacity-20"></div>
-                        <svg class="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                    <h4 class="text-xl font-semibold text-white mb-2">1. Cognitive Profiling</h4>
-                    <p class="text-sm text-slate-400">The AI analyzes how you process information, identifying your strengths and natural learning patterns.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="relative flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface border border-white/5 flex items-center justify-center mb-6 shadow-2xl">
-                        <svg class="w-10 h-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <h4 class="text-xl font-semibold text-white mb-2">2. Adaptive Content</h4>
-                    <p class="text-sm text-slate-400">Content adjusts dynamically in difficulty and format to keep you challenged without overwhelming you.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="relative flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface border border-white/5 flex items-center justify-center mb-6 shadow-2xl">
-                        <svg class="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                        </svg>
-                    </div>
-                    <h4 class="text-xl font-semibold text-white mb-2">3. Accelerated Mastery</h4>
-                    <p class="text-sm text-slate-400">Targeted quizzes and metacognitive tracking ensure deep understanding and long-term retention.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-24 border-t border-white/[0.05] relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-accent/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mehmet Özel | AI & Data Science</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						sans: ['Inter', 'sans-serif'],
+						heading: ['Outfit', 'sans-serif'],
+						mono: ['Fira Code', 'monospace'],
+					},
+					colors: {
+						background: '#09090B', /* Zinc 950 */
+						surface: '#121214', /* Slightly darker than Zinc 900 for more depth */
+						primary: '#9B7FE8', /* Ice Purple */
+						accent: '#F43F5E', /* Rose/Crimson */
+					}
+				}
+			}
+		}
+	</script>
+	<style>
+		body {
+			background-color: #09090B;
+			color: #D4D4D8;
+		}
         
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-xs font-bold text-primary tracking-widest uppercase mb-2">Features</h2>
-                <h3 class="font-heading text-4xl md:text-5xl font-bold text-white mb-4">Built for how YOU think.</h3>
-                <p class="text-slate-400">Our platform dynamically adjusts to your pace and knowledge gaps. From smart quiz generation to metacognitive tracking, every feature is designed to optimize your retention.</p>
-            </div>
+		/* Refined Dot Pattern */
+		.bg-dot-pattern {
+			background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+			background-size: 24px 24px;
+			mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+			-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+		}
 
-            <!-- Bento Grid Layout -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[220px]">
+		/* Upgraded Premium Card Hover */
+		.card-hover {
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			background: linear-gradient(145deg, rgba(24, 24, 27, 0.4) 0%, rgba(9, 9, 11, 0.8) 100%);
+			backdrop-filter: blur(12px);
+			border: 1px solid rgba(255, 255, 255, 0.05);
+		}
+		.card-hover:hover {
+			box-shadow: 0 8px 40px rgba(155, 127, 232, 0.08);
+			transform: translateY(-4px);
+			border-color: rgba(155, 127, 232, 0.25);
+		}
+		.project-card:hover {
+			box-shadow: 0 8px 40px rgba(244, 63, 94, 0.08);
+			border-color: rgba(244, 63, 94, 0.25);
+		}
+
+		/* Modern Text Gradients */
+		.gradient-text {
+			background: linear-gradient(135deg, #9B7FE8 0%, #F43F5E 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+		.text-glow {
+			text-shadow: 0 0 30px rgba(155, 127, 232, 0.4);
+		}
+		.white-gradient-text {
+			background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		/* Subtle Inner Glow for depth */
+		.bento-inner-glow {
+			box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+		}
+	</style>
+</head>
+<body class="antialiased selection:bg-primary/30 selection:text-white relative overflow-x-hidden">
+
+	<!-- Ambient Background Glows -->
+	<div class="fixed inset-0 bg-dot-pattern -z-20 pointer-events-none"></div>
+	<!-- Adjusted main glow to be more focal around the hero text -->
+	<div class="fixed top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+	<div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+
+	<!-- Navigation -->
+	<nav class="fixed w-full z-50 top-0 border-b border-white/[0.04] bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
+		<div class="max-w-6xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
+			<!-- Logo/Name with Profile Picture -->
+			<a href="#" class="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-3 font-heading group">
+				<!-- Profile Picture Container -->
+				<div class="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-primary/20 group-hover:border-primary/50 transition-colors relative">
+					<img src="./assets/userprofilepicture.png" alt="Mehmet Özel" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=MÖ'"/>
+					<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+				</div>
+				<!-- Name -->
+				<span>
+					<span class="text-primary">M</span>Özel.
+				</span>
+			</a>
+
+			<div class="hidden md:flex gap-8 text-sm font-medium">
+				<a href="#about" class="text-zinc-400 hover:text-white transition-colors">About</a>
+				<a href="#projects" class="text-zinc-400 hover:text-white transition-colors">Projects</a>
+				<a href="#experience" class="text-zinc-400 hover:text-white transition-colors">Experience</a>
+			</div>
+			<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-background bg-white hover:bg-zinc-200 rounded-md transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+				Connect
+			</a>
+		</div>
+	</nav>
+
+	<!-- Hero Section -->
+	<section class="relative pt-36 pb-20 md:pt-48 md:pb-32 px-6 flex flex-col justify-center min-h-[90vh]">
+		<!-- Focal container for dramatic effect -->
+		<div class="max-w-4xl mx-auto relative z-10 w-full">
+			<div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent blur-3xl -z-10 rounded-full opacity-50"></div>
+            
+			<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-zinc-300 text-[10px] md:text-xs font-mono font-medium tracking-wider mb-8 backdrop-blur-md">
+				<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#9B7FE8]"></span>
+				AI & Data Science @ Bournemouth University
+			</div>
+            
+			<!-- Mobile-first hierarchy for heading -->
+			<h1 class="font-heading text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-[1.05]">
+				<span class="white-gradient-text block mb-2">Building Production-</span>
+				<span class="gradient-text text-glow">Grade ML Tools.</span>
+			</h1>
+            
+			<p class="text-base md:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed font-light">
+				I'm Mehmet. I specialize in <strong class="text-zinc-200 font-medium">LLM tooling</strong>, <strong class="text-zinc-200 font-medium">adaptive learning systems</strong>, and cognitive-inspired AI. Focused on shipping robust, cloud-native products that solve real problems.
+			</p>
+            
+			<div class="flex flex-col sm:flex-row gap-4 mb-8">
+				<a href="#projects" class="px-6 py-3 md:px-8 md:py-4 rounded-lg bg-primary text-background font-semibold hover:bg-purple-400 transition-all shadow-[0_0_20px_rgba(155,127,232,0.25)] hover:shadow-[0_0_30px_rgba(155,127,232,0.4)] font-mono text-sm flex items-center justify-center group">
+					View Selected Works
+					<svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- About / Bento Grid Section -->
+	<section id="about" class="py-24 border-t border-white/[0.05] relative">
+		<div class="max-w-5xl mx-auto px-6">
+			<h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-10 font-mono flex items-center gap-3">
+				<span class="w-8 h-[1px] bg-accent/50"></span>
+				Identity & Focus
+			</h2>
+            
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
                 
-                <!-- Feature 1: Personalized AI Learning (Image inside) -->
-                <div class="md:col-span-2 md:row-span-2 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col">
-                    <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                    <!-- Mockup Container -->
-                    <div class="relative w-full h-56 mb-6 rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-inner">
-                        <img src="./assets/cognitiveana.PNG" alt="Metacognition and Analytics" class="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent opacity-60"></div>
-                    </div>
-                    <div class="relative z-10 mt-auto">
-                        <h4 class="font-heading text-2xl font-bold text-white mb-2 tracking-wide">Personalized AI Learning</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed">Adapts to your unique cognitive style and learning pace. The system analyzes how you process information and adjusts content delivery to match your brain's natural patterns.</p>
-                    </div>
-                </div>
+				<!-- Medium Writer Card -->
+				<div class="md:col-span-2 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<!-- Banner Image -->
+					<div class="w-full h-28 md:h-36 relative overflow-hidden border-b border-white/[0.02]">
+						<img src="./assets/mediumbanner.PNG" alt="Medium Profile Banner" class="w-full h-full object-cover object-center opacity-80" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+						<!-- Gradient overlay for smooth blending -->
+						<div class="absolute inset-0 bg-gradient-to-t from-[#121214]/80 via-transparent to-transparent"></div>
+					</div>
+                    
+					<div class="flex flex-col space-y-1.5 p-6 md:p-8 pt-6">
+						<div class="flex items-start justify-between mb-2">
+							<div>
+								<h3 class="font-semibold tracking-tight font-heading text-xl md:text-2xl text-zinc-100">Publication Editor</h3>
+								<p class="text-sm text-primary font-mono mt-1">220+ Published Articles</p>
+							</div>
+							<a href="https://medium.com/@mehmet.ozel2701" target="_blank" class="inline-flex items-center rounded bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-mono tracking-wider uppercase text-zinc-400">Medium</a>
+						</div>
+					</div>
+					<div class="p-6 md:p-8 pt-0 text-sm md:text-base text-zinc-400 leading-relaxed mt-auto">
+						Authoring and editing technical content focused on AI architecture and software engineering. I break down complex models into practical, actionable insights for developers.
+					</div>
+				</div>
 
-                <!-- Feature 2: Smart Quiz Generation (Image faded right) -->
-                <div class="md:col-span-2 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 md:p-8 card-hover bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center">
-                    <!-- Text Area -->
-                    <div class="w-full md:w-1/2 relative z-10">
-                        <h4 class="font-heading text-xl font-bold text-white mb-2 tracking-wide">Smart Quiz Generation</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed pr-4">Creates custom assessments based on your knowledge gaps. Our AI identifies exactly what you need to practice.</p>
-                    </div>
-                    <!-- Faded Image Right -->
-                    <div class="absolute right-0 top-0 w-full md:w-3/5 h-full z-0 border-l border-white/5 bg-[#0B101E]">
-                        <div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 to-transparent z-10"></div>
-                        <img src="./assets/Ekran%20Al%C4%B1nt%C4%B1s%C4%B1%209.PNG" alt="Smart AI Quiz" class="h-full w-full object-cover object-left opacity-60 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen" />
-                    </div>
-                </div>
+				<!-- Cognitive AI Card -->
+				<div class="md:col-span-1 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<div class="flex flex-col space-y-1.5 p-6 md:p-8">
+						<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 border border-primary/20">
+							<svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+						</div>
+						<h3 class="font-semibold tracking-tight font-heading text-lg text-zinc-100">Cognitive AI</h3>
+					</div>
+					<div class="p-6 md:p-8 pt-0 text-sm text-zinc-400 mt-auto leading-relaxed">
+						Designing systems inspired by human learning dynamics—focusing on attention mechanisms, memory retention, and rigorous model evaluation.
+					</div>
+				</div>
 
-                <!-- Feature 3 (Small Square) -->
-                <div class="md:col-span-1 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col justify-between">
-                    <svg class="w-8 h-8 text-accent/50 group-hover:text-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                    <div>
-                        <h4 class="font-heading text-lg font-bold text-white mb-2">Metacognitive Tracking</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">Understand your learning strategies and identify what works best.</p>
-                    </div>
-                </div>
+				<!-- Core Stack & Certs Card -->
+				<div class="md:col-span-3 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<div class="flex flex-col md:flex-row md:items-center justify-between p-6 md:p-8 gap-6">
+						<div class="max-w-md">
+							<h3 class="font-semibold tracking-tight font-heading text-xl text-zinc-100 mb-2">Tech Stack & Infrastructure</h3>
+							<p class="text-sm text-zinc-400">Certified cloud practitioner building scalable, modern AI applications.</p>
+						</div>
+                        
+						<div class="flex flex-wrap gap-2 md:justify-end flex-1">
+							<!-- Premium Badges -->
+							<span class="inline-flex items-center rounded bg-primary/10 border border-primary/30 px-3 py-1.5 text-xs font-mono font-medium text-primary shadow-[0_0_15px_rgba(155,127,232,0.15)]">AWS Cloud Practitioner</span>
+							<span class="inline-flex items-center rounded bg-accent/10 border border-accent/30 px-3 py-1.5 text-xs font-mono font-medium text-accent shadow-[0_0_15px_rgba(244,63,94,0.15)]">AWS AI Practitioner</span>
+                            
+							<!-- Standard Stack -->
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Next.js</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">FastAPI</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">PyTorch</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Tailwind</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Docker</span>
+						</div>
+					</div>
+				</div>
 
-                <!-- Feature 4 (Small Square) -->
-                <div class="md:col-span-1 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col justify-between">
-                    <svg class="w-8 h-8 text-primary/50 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                    <div>
-                        <h4 class="font-heading text-lg font-bold text-white mb-2">Adaptive Content</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">Adjusts difficulty based on your performance to keep you challenged.</p>
-                    </div>
-                </div>
+			</div>
+		</div>
+	</section>
 
-                <!-- Feature 5: Multi-Subject Support (Full Width Bottom + Background Image) -->
-                <div class="md:col-span-4 md:row-span-1 border border-white/[0.08] rounded-3xl p-0 card-hover bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-stretch">
-                    <div class="p-6 md:p-8 md:w-1/2 relative z-10 flex flex-col justify-center">
-                        <h4 class="font-heading text-xl font-bold text-white mb-2 tracking-wide">Multi-Subject Support</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed max-w-md">Works across any subject or topic you want to master. From mathematics to languages, NeurIQ adapts to your learning needs.</p>
-                    </div>
-                    <!-- Background image filling the rest -->
-                    <div class="absolute right-0 top-0 w-full md:w-2/3 h-full z-0 overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-surface via-surface/90 to-transparent z-10"></div>
-                        <img src="./assets/Ekran%20Al%C4%B1nt%C4%B1s%C4%B1.PNG" alt="My Courses Dashboard" class="w-full h-full object-cover object-left-top opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 mix-blend-lighten" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+	<!-- Selected Works / Projects -->
+	<section id="projects" class="py-24 border-t border-white/[0.05] relative">
+		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+		<div class="max-w-5xl mx-auto px-6">
+			<h2 class="text-xs font-bold text-primary tracking-widest uppercase mb-12 font-mono flex items-center gap-3">
+				<span class="w-8 h-[1px] bg-primary/50"></span>
+				Shipped Products
+			</h2>
 
-    <!-- About / Story Section -->
-    <section id="about" class="py-24 border-t border-white/[0.02] bg-surface/30">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="w-full md:w-1/3 flex justify-center">
-                    <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                        <!-- Placeholder for your photo -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-surface to-background flex items-center justify-center">
-                            <span class="text-4xl font-bold text-slate-600">MO</span>
-                        </div>
-                        <div class="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
-                    </div>
-                </div>
-                <div class="w-full md:w-2/3">
-                    <h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-2">About</h2>
-                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Built by a student, for students.</h3>
-                    <p class="text-lg text-slate-300 mb-6 leading-relaxed">
-                        I'm a Year 1 AI undergrad at Bournemouth University. Between juggling AWS certs, AI, and Neuroscience, I realized: everyone learns differently, but most tools treat us all the same. 
-                    </p>
-                    <p class="text-lg text-slate-300 mb-8 leading-relaxed">
-                        NeurIQ is my answer - a learning companion that adapts to YOUR brain, not a one-size-fits-all syllabus.
-                    </p>
-                    <a href="#contact" class="inline-flex items-center text-primary font-semibold hover:text-white transition-colors">
-                        Get in touch directly 
-                        <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Use Cases Section (Tabs) -->
-    <section class="py-24 border-t border-white/[0.02]">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-2">Use Cases</h2>
-            <h3 class="text-3xl md:text-4xl font-bold text-white mb-12">Who is NeurIQ for?</h3>
-            
-            <!-- Tabs Navigation -->
-            <div class="flex flex-col sm:flex-row justify-center gap-2 mb-8 bg-surface/80 p-2 rounded-xl sm:rounded-full border border-white/5">
-                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active w-full sm:w-auto px-6 py-3 rounded-lg sm:rounded-full text-sm font-semibold bg-primary text-white transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)]">University Students</button>
-                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn w-full sm:w-auto px-6 py-3 rounded-lg sm:rounded-full text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all">Self-Taught Devs</button>
-                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn w-full sm:w-auto px-6 py-3 rounded-lg sm:rounded-full text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all">Lifelong Learners</button>
-            </div>
-
-            <!-- Tabs Content -->
-            <div class="bg-surface/30 border border-white/5 rounded-2xl p-8 md:p-12 min-h-[200px] flex items-center justify-center text-center">
-                <div id="tab1" class="tab-content">
-                    <h4 class="text-xl font-bold text-white mb-4">Tackling Complex STEM Subjects</h4>
-                    <p class="text-slate-400 max-w-2xl mx-auto">University coursework can be overwhelming. NeurIQ breaks down dense academic materials, creating personalized study maps and quizzes to help you ace your midterms and finals with less stress.</p>
-                </div>
-                <div id="tab2" class="tab-content hidden">
-                    <h4 class="text-xl font-bold text-white mb-4">Mastering New Frameworks & AI</h4>
-                    <p class="text-slate-400 max-w-2xl mx-auto">Learning to code or diving into Machine Learning requires practice. Our system generates adaptive coding quizzes and algorithmic challenges based on exactly where you are getting stuck.</p>
-                </div>
-                <div id="tab3" class="tab-content hidden">
-                    <h4 class="text-xl font-bold text-white mb-4">Accelerating Academic Research</h4>
-                    <p class="text-slate-400 max-w-2xl mx-auto">Whether you are exploring neuroscience or picking up a new language, NeurIQ adapts to your specific demands, tracking your metacognition so you retain knowledge efficiently.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Social Proof / Waitlist Focus -->
-    <section id="waitlist" class="py-24 border-t border-white/[0.02] relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 -z-10"></div>
-        <div class="max-w-3xl mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Join the NeurIQ beta waitlist.</h2>
-            <p class="text-lg text-slate-400 mb-10">Get early access to an AI study companion that actually understands you. Drop your email to be among the first invited to the private beta.</p>
-            
-            <form id="waitlist-form" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-                <input type="email" name="email" required placeholder="Enter your email" aria-label="Enter your email" 
-                    class="flex-1 px-6 py-4 rounded-xl bg-surface border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner">
-                <button type="submit" class="px-8 py-4 rounded-xl bg-primary text-white font-semibold hover:bg-violet-700 transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] whitespace-nowrap">
-                    Join Beta
-                </button>
-            </form>
-            <p class="text-xs text-slate-500 mt-6">We respect your privacy. No spam, ever.</p>
-        </div>
-    </section>
-
-    <!-- Footer & Contact -->
-    <footer id="contact" class="border-t border-white/5 bg-black pt-20 pb-10">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-16 mb-16">
+			<div class="space-y-8 md:space-y-12">
                 
-                <!-- Contact Form -->
-                <div>
-                    <h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-2">Send a Message</h2>
-                    <h3 class="text-2xl font-bold text-white mb-6">Get in touch directly</h3>
-                    <p class="text-slate-400 mb-8">Have a question, feedback, or collaboration idea? I'd love to hear from you.</p>
-                    
-                    <form id="contact-form" class="space-y-4">
-                        <input type="text" name="name" required placeholder="Your name" aria-label="Your name"
-                            class="w-full px-5 py-3 rounded-lg bg-surface border border-white/5 text-white focus:outline-none focus:border-primary transition-colors">
-                        <input type="email" name="email" required placeholder="Your email" aria-label="Your email"
-                            class="w-full px-5 py-3 rounded-lg bg-surface border border-white/5 text-white focus:outline-none focus:border-primary transition-colors">
-                        <textarea name="message" required placeholder="Your message" rows="4" aria-label="Your message"
-                            class="w-full px-5 py-3 rounded-lg bg-surface border border-white/5 text-white focus:outline-none focus:border-primary transition-colors resize-none"></textarea>
-                        <button type="submit" class="px-6 py-3 rounded-lg bg-white text-black font-semibold hover:bg-slate-200 transition-colors">
-                            Contact Me
-                        </button>
-                    </form>
-                </div>
+				<!-- Project 1: Compiler (Flagship) -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
+					<!-- Flagship Badge -->
+					<div class="absolute top-6 right-6 px-3 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+						Flagship
+					</div>
 
-                <!-- Footer Links & Info -->
-                <div class="flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-2">Find Me On</h2>
-                        <div class="space-y-6 mt-6">
-                            <!-- Twitter -->
-                            <a href="https://x.com/Mehmetzel186826" target="_blank" class="block group">
-                                <h4 class="text-white font-semibold group-hover:text-primary transition-colors">Twitter / X</h4>
-                                <p class="text-sm text-slate-500">@Mehmetzel186826 - Follow for NeurIQ updates and AI insights</p>
-                            </a>
-                            <!-- Instagram -->
-                            <a href="https://www.instagram.com/mehmt_ozell/" target="_blank" class="block group">
-                                <h4 class="text-white font-semibold group-hover:text-primary transition-colors">Instagram</h4>
-                                <p class="text-sm text-slate-500">@mehmt_ozell - Behind the scenes and project updates</p>
-                            </a>
-                            <!-- LinkedIn -->
-                            <a href="https://www.linkedin.com/in/mehmet-ozel-695227300/" target="_blank" class="block group">
-                                <h4 class="text-white font-semibold group-hover:text-primary transition-colors">LinkedIn</h4>
-                                <p class="text-sm text-slate-500">Mehmet Ozel - Connect for professional opportunities</p>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-12 md:mt-0 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <span class="text-white font-bold text-lg">NeurIQ</span>
-                            <span class="block text-xs text-slate-500 mt-1">AI that adapts to how YOU learn.</span>
-                        </div>
-                        <div class="flex gap-4 text-sm text-slate-400">
-                            <a href="#about" class="hover:text-white">About</a>
-                            <a href="#features" class="hover:text-white">Features</a>
-                            <a href="#contact" class="hover:text-white">Contact</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase mb-4 border border-accent/20">
+							LLM Optimizer
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">Compiler</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							A prompt optimization engine built to slash LLM token costs without degrading output quality. Features a local heuristic engine, RAG context management, and a seamless Chrome extension.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-accent/30 text-sm text-zinc-300 italic">
+							"Early benchmarks demonstrate up to a 40% reduction in token usage while preserving task performance."
+						</div>
 
-            <!-- Builder Credit -->
-            <div class="text-center pt-8 border-t border-white/5">
-                <a href="https://www.framer.com/" target="_blank" class="text-xs text-slate-600 hover:text-slate-400 transition-colors">
-                    Create a free website with Framer, the website builder loved by startups, designers and agencies.
-                </a>
-            </div>
-        </div>
-    </footer>
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Heuristics Engine</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Chrome Extension</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Local RAG</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://madara88645.github.io/landingpages/compiler/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-accent transition-colors font-mono text-sm w-max group/link">
+								Live App <svg class="w-4 h-4 ml-1 transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+							</a>
+							<a href="https://github.com/madara88645/Compiler" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
+						<img src="./assets/comp1.PNG" alt="Compiler Interface" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
 
-    <!-- Simple Script for Tabs -->
-    <script>
-        const FORM_ENDPOINT = "https://formsubmit.co/ajax/mehmet.ozel2701@gmail.com";
-        const DEFAULT_LANGUAGE = "en";
-        const userLanguage = (navigator.language || DEFAULT_LANGUAGE).toLowerCase();
-        const isTurkish = userLanguage.startsWith("tr");
+				<!-- Project 2: NeurIQ -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col">
+						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase mb-4 border border-primary/20">
+							Adaptive AI
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">NeurIQ</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							An adaptive learning management system leveraging cognitive AI. It utilizes metacognitive tracking and dynamic content generation to tailor education to individual learning dynamics.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Aiming to improve knowledge retention efficiency by 30% via personalized spaced-repetition loops."
+						</div>
 
-        const i18n = {
-            en: {
-                sending: "Sending...",
-                waitlistSuccess: "Thanks! You are on the waitlist.",
-                contactSuccess: "Message sent. I will get back to you soon.",
-                error: "Message could not be sent. Please try again."
-            },
-            tr: {
-                sending: "Gonderiliyor...",
-                waitlistSuccess: "Tesekkurler! Waitlist kaydin alindi.",
-                contactSuccess: "Mesajin gonderildi. En kisa surede donus yapilacak.",
-                error: "Mesaj gonderilemedi. Lutfen tekrar dene."
-            }
-        };
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">DeepSeek</span>
+						</div>
+						<a href="https://madara88645.github.io/landingpages/neurIQ/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-primary transition-colors font-mono text-sm w-max group/link">
+							View Case Study <svg class="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+						</a>
+					</div>
+					<!-- Image Container -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
+						<img src="./assets/neuriq.PNG" alt="NeurIQ Dashboard" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
 
-        function t(key) {
-            const dictionary = isTurkish ? i18n.tr : i18n.en;
-            return dictionary[key] || i18n.en[key] || "";
-        }
+				<!-- Project 3: PaperHunterAgent -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="flex flex-wrap gap-2 mb-4">
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
+								Research Agent / Quantum ML
+							</div>
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
+								Research
+							</div>
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">PaperHunterAgent</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							Automatically searches arXiv and Semantic Scholar for the latest quantum science papers, filters by relevance, and generates structured Markdown summaries with concept maps. Built for PhD students and researchers who need dense, structured digests of new papers without manual scraping — complete with TL;DR, key equations, and Mermaid graphs.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Reduces literature review time by providing relevance-scored summaries of 5–10 papers in under 5 minutes."
+						</div>
 
-        async function submitToEmail(form, subject, successKey) {
-            const submitButton = form.querySelector('button[type="submit"]');
-            const originalButtonText = submitButton.textContent.trim();
-            submitButton.disabled = true;
-            submitButton.textContent = t("sending");
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">arXiv API</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Semantic Scholar</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">CLI Tool</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Mermaid Maps</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://github.com/madara88645/PaperHunterAgent" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container / Placeholder -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
+						<img src="./assets/9f92b06d-6fa1-4082-99eb-09f930bca96b.png" alt="PaperHunterAgent Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
 
-            const formData = new FormData(form);
-            formData.append("_subject", subject);
-            formData.append("_captcha", "false");
-            formData.append("_replyto", formData.get("email") || "");
+				<!-- Project 4: VibeGraph -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="flex flex-wrap gap-2 mb-4">
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
+								Code Learning / AST Analysis
+							</div>
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
+								Learning Tool
+							</div>
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">VibeGraph</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							Transforms any Python codebase into an interactive call graph with node-level AI explanations, learning path suggestions, and real-time 'ghost runner' execution visualization. Designed for developers who learn by vibing with code but need structure — ask questions about any function, generate step-by-step learning orders, or watch AI traverse the execution path live.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Enables rapid comprehension of unfamiliar codebases by visualizing structure and providing on-demand AI explanations for every node."
+						</div>
 
-            try {
-                const response = await fetch(FORM_ENDPOINT, {
-                    method: "POST",
-                    body: formData,
-                    headers: { "Accept": "application/json" }
-                });
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python AST</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React Flow</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Groq</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">NetworkX</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://github.com/madara88645/VibeGraph" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container / Placeholder -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
+						<img src="./assets/VibeGraph.PNG" alt="VibeGraph Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
 
-                if (!response.ok) {
-                    throw new Error("Mail service returned an error.");
-                }
+			</div>
+		</div>
+	</section>
 
-                form.reset();
-                alert(t(successKey));
-            } catch (error) {
-                alert(t("error"));
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = originalButtonText;
-            }
-        }
-
-        document.getElementById("waitlist-form").addEventListener("submit", function (event) {
-            event.preventDefault();
-            submitToEmail(this, "NeurIQ Waitlist Signup", "waitlistSuccess");
-        });
-
-        document.getElementById("contact-form").addEventListener("submit", function (event) {
-            event.preventDefault();
-            submitToEmail(this, "NeurIQ Contact Message", "contactSuccess");
-        });
-
-        function switchTab(tabId) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.add('hidden');
-            });
+	<!-- Footer / Contact -->
+	<footer class="border-t border-white/[0.05] bg-surface/20 py-20 relative overflow-hidden">
+		<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+		<div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+			<h2 class="font-heading text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Let's build something.</h2>
+			<p class="text-zinc-400 mb-10 max-w-md mx-auto text-sm md:text-base">
+				Currently open for research collaborations, software engineering internships, and deep technical discussions.
+			</p>
             
-            // Reset all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('bg-primary', 'text-white', 'shadow-[0_0_15px_rgba(124,58,237,0.3)]');
-                el.classList.add('text-slate-400', 'hover:bg-white/5');
-            });
-            
-            // Show selected tab content
-            document.getElementById(tabId).classList.remove('hidden');
-            
-            // Highlight selected button
-            const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.remove('text-slate-400', 'hover:bg-white/5');
-            activeBtn.classList.add('bg-primary', 'text-white', 'shadow-[0_0_15px_rgba(124,58,237,0.3)]');
-        }
-    </script>
+			<div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+				<a href="mailto:mehmet.ozel2701@gmail.com" class="px-8 py-3.5 rounded-lg bg-white text-background font-bold hover:bg-zinc-200 transition-all font-mono text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+					Get In Touch
+				</a>
+				<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="px-8 py-3.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all font-mono text-sm backdrop-blur-sm">
+					LinkedIn
+				</a>
+			</div>
+
+			<p class="text-xs text-zinc-600 font-mono flex items-center justify-center gap-2">
+				© 2026 Mehmet Özel. <span class="w-1 h-1 bg-zinc-600 rounded-full"></span> Engineered with discipline.
+			</p>
+		</div>
+	</footer>
+
 </body>
 </html>
 
