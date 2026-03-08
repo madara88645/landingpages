@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mehmet Özel | AI & Data Science</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						sans: ['Inter', 'sans-serif'],
+						heading: ['Outfit', 'sans-serif'],
+						mono: ['Fira Code', 'monospace'],
+					},
+					colors: {
+						background: '#09090B', /* Zinc 950 */
+						surface: '#121214', /* Slightly darker than Zinc 900 for more depth */
+						primary: '#9B7FE8', /* Ice Purple */
+						accent: '#F43F5E', /* Rose/Crimson */
+					}
+				}
+			}
+		}
+	</script>
+	<style>
+		body {
+			background-color: #09090B;
+			color: #D4D4D8;
+		}
+        
+		/* Refined Dot Pattern */
+		.bg-dot-pattern {
+			background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+			background-size: 24px 24px;
+			mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+			-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+		}
+
+		/* Upgraded Premium Card Hover */
+		.card-hover {
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			background: linear-gradient(145deg, rgba(24, 24, 27, 0.4) 0%, rgba(9, 9, 11, 0.8) 100%);
+			backdrop-filter: blur(12px);
+			border: 1px solid rgba(255, 255, 255, 0.05);
+		}
+		.card-hover:hover {
+			box-shadow: 0 8px 40px rgba(155, 127, 232, 0.08);
+			transform: translateY(-4px);
+			border-color: rgba(155, 127, 232, 0.25);
+		}
+		.project-card:hover {
+			box-shadow: 0 8px 40px rgba(244, 63, 94, 0.08);
+			border-color: rgba(244, 63, 94, 0.25);
+		}
+
+		/* Modern Text Gradients */
+		.gradient-text {
+			background: linear-gradient(135deg, #9B7FE8 0%, #F43F5E 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+		.text-glow {
+			text-shadow: 0 0 30px rgba(155, 127, 232, 0.4);
+		}
+		.white-gradient-text {
+			background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		/* Subtle Inner Glow for depth */
+		.bento-inner-glow {
+			box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+		}
+	</style>
+</head>
+<body class="antialiased selection:bg-primary/30 selection:text-white relative overflow-x-hidden">
+
+	<!-- Ambient Background Glows -->
+	<div class="fixed inset-0 bg-dot-pattern -z-20 pointer-events-none"></div>
+	<!-- Adjusted main glow to be more focal around the hero text -->
+	<div class="fixed top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+	<div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+
+	<!-- Navigation -->
+	<nav class="fixed w-full z-50 top-0 border-b border-white/[0.04] bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
+		<div class="max-w-6xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
+			<!-- Logo/Name with Profile Picture -->
+			<a href="#" class="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-3 font-heading group">
+				<!-- Profile Picture Container -->
+				<div class="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-primary/20 group-hover:border-primary/50 transition-colors relative">
+					<img src="./assets/userprofilepicture.png" alt="Mehmet Özel" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=MÖ'"/>
+					<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+				</div>
+				<!-- Name -->
+				<span>
+					<span class="text-primary">M</span>Özel.
+				</span>
+			</a>
+
+			<div class="hidden md:flex gap-8 text-sm font-medium">
+				<a href="#about" class="text-zinc-400 hover:text-white transition-colors">About</a>
+				<a href="#projects" class="text-zinc-400 hover:text-white transition-colors">Projects</a>
+				<a href="#experience" class="text-zinc-400 hover:text-white transition-colors">Experience</a>
+			</div>
+			<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-background bg-white hover:bg-zinc-200 rounded-md transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+				Connect
+			</a>
+		</div>
+	</nav>
+
+	<!-- Hero Section -->
+	<section class="relative pt-36 pb-20 md:pt-48 md:pb-32 px-6 flex flex-col justify-center min-h-[90vh]">
+		<!-- Focal container for dramatic effect -->
+		<div class="max-w-4xl mx-auto relative z-10 w-full">
+			<div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent blur-3xl -z-10 rounded-full opacity-50"></div>
+            
+			<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-zinc-300 text-[10px] md:text-xs font-mono font-medium tracking-wider mb-8 backdrop-blur-md">
+				<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#9B7FE8]"></span>
+				AI & Data Science @ Bournemouth University
+			</div>
+            
+			<!-- Mobile-first hierarchy for heading -->
+			<h1 class="font-heading text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-[1.05]">
+				<span class="white-gradient-text block mb-2">Building Production-</span>
+				<span class="gradient-text text-glow">Grade ML Tools.</span>
+			</h1>
+            
+			<p class="text-base md:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed font-light">
+				I'm Mehmet. I specialize in <strong class="text-zinc-200 font-medium">LLM tooling</strong>, <strong class="text-zinc-200 font-medium">adaptive learning systems</strong>, and cognitive-inspired AI. Focused on shipping robust, cloud-native products that solve real problems.
+			</p>
+            
+			<div class="flex flex-col sm:flex-row gap-4 mb-8">
+				<a href="#projects" class="px-6 py-3 md:px-8 md:py-4 rounded-lg bg-primary text-background font-semibold hover:bg-purple-400 transition-all shadow-[0_0_20px_rgba(155,127,232,0.25)] hover:shadow-[0_0_30px_rgba(155,127,232,0.4)] font-mono text-sm flex items-center justify-center group">
+					View Selected Works
+					<svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- About / Bento Grid Section -->
+	<section id="about" class="py-24 border-t border-white/[0.05] relative">
+		<div class="max-w-5xl mx-auto px-6">
+			<h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-10 font-mono flex items-center gap-3">
+				<span class="w-8 h-[1px] bg-accent/50"></span>
+				Identity & Focus
+			</h2>
+            
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                
+				<!-- Medium Writer Card -->
+				<div class="md:col-span-2 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<!-- Banner Image -->
+					<div class="w-full h-28 md:h-36 relative overflow-hidden border-b border-white/[0.02]">
+						<img src="./assets/mediumbanner.png" alt="Medium Profile Banner" class="w-full h-full object-cover object-center opacity-80" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+						<!-- Gradient overlay for smooth blending -->
+						<div class="absolute inset-0 bg-gradient-to-t from-[#121214]/80 via-transparent to-transparent"></div>
+					</div>
+                    
+					<div class="flex flex-col space-y-1.5 p-6 md:p-8 pt-6">
+						<div class="flex items-start justify-between mb-2">
+							<div>
+								<h3 class="font-semibold tracking-tight font-heading text-xl md:text-2xl text-zinc-100">Publication Editor</h3>
+								<p class="text-sm text-primary font-mono mt-1">220+ Published Articles</p>
+							</div>
+							<a href="https://medium.com/@mehmet.ozel2701" target="_blank" class="inline-flex items-center rounded bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-mono tracking-wider uppercase text-zinc-400">Medium</a>
+						</div>
+					</div>
+					<div class="p-6 md:p-8 pt-0 text-sm md:text-base text-zinc-400 leading-relaxed mt-auto">
+						Authoring and editing technical content focused on AI architecture and software engineering. I break down complex models into practical, actionable insights for developers.
+					</div>
+				</div>
+
+				<!-- Cognitive AI Card -->
+				<div class="md:col-span-1 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<div class="flex flex-col space-y-1.5 p-6 md:p-8">
+						<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 border border-primary/20">
+							<svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+						</div>
+						<h3 class="font-semibold tracking-tight font-heading text-lg text-zinc-100">Cognitive AI</h3>
+					</div>
+					<div class="p-6 md:p-8 pt-0 text-sm text-zinc-400 mt-auto leading-relaxed">
+						Designing systems inspired by human learning dynamics—focusing on attention mechanisms, memory retention, and rigorous model evaluation.
+					</div>
+				</div>
+
+				<!-- Core Stack & Certs Card -->
+				<div class="md:col-span-3 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
+					<div class="flex flex-col md:flex-row md:items-center justify-between p-6 md:p-8 gap-6">
+						<div class="max-w-md">
+							<h3 class="font-semibold tracking-tight font-heading text-xl text-zinc-100 mb-2">Tech Stack & Infrastructure</h3>
+							<p class="text-sm text-zinc-400">Certified cloud practitioner building scalable, modern AI applications.</p>
+						</div>
+                        
+						<div class="flex flex-wrap gap-2 md:justify-end flex-1">
+							<!-- Premium Badges -->
+							<span class="inline-flex items-center rounded bg-primary/10 border border-primary/30 px-3 py-1.5 text-xs font-mono font-medium text-primary shadow-[0_0_15px_rgba(155,127,232,0.15)]">AWS Cloud Practitioner</span>
+							<span class="inline-flex items-center rounded bg-accent/10 border border-accent/30 px-3 py-1.5 text-xs font-mono font-medium text-accent shadow-[0_0_15px_rgba(244,63,94,0.15)]">AWS AI Practitioner</span>
+                            
+							<!-- Standard Stack -->
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Next.js</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">FastAPI</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">PyTorch</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Tailwind</span>
+							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Docker</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<!-- Selected Works / Projects -->
+	<section id="projects" class="py-24 border-t border-white/[0.05] relative">
+		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+		<div class="max-w-5xl mx-auto px-6">
+			<h2 class="text-xs font-bold text-primary tracking-widest uppercase mb-12 font-mono flex items-center gap-3">
+				<span class="w-8 h-[1px] bg-primary/50"></span>
+				Shipped Products
+			</h2>
+
+			<div class="space-y-8 md:space-y-12">
+                
+				<!-- Project 1: Compiler (Flagship) -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
+					<!-- Flagship Badge -->
+					<div class="absolute top-6 right-6 px-3 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+						Flagship
+					</div>
+
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase mb-4 border border-accent/20">
+							LLM Optimizer
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">Compiler</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							A prompt optimization engine built to slash LLM token costs without degrading output quality. Features a local heuristic engine, RAG context management, and a seamless Chrome extension.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-accent/30 text-sm text-zinc-300 italic">
+							"Early benchmarks demonstrate up to a 40% reduction in token usage while preserving task performance."
+						</div>
+
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Heuristics Engine</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Chrome Extension</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Local RAG</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://madara88645.github.io/landingpages/compiler/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-accent transition-colors font-mono text-sm w-max group/link">
+								Live App <svg class="w-4 h-4 ml-1 transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+							</a>
+							<a href="https://github.com/madara88645/Compiler" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
+						<img src="./assets/comp1.PNG" alt="Compiler Interface" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
+
+				<!-- Project 2: NeurIQ -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col">
+						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase mb-4 border border-primary/20">
+							Adaptive AI
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">NeurIQ</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							An adaptive learning management system leveraging cognitive AI. It utilizes metacognitive tracking and dynamic content generation to tailor education to individual learning dynamics.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Aiming to improve knowledge retention efficiency by 30% via personalized spaced-repetition loops."
+						</div>
+
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">DeepSeek</span>
+						</div>
+						<a href="https://madara88645.github.io/landingpages/neurIQ/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-primary transition-colors font-mono text-sm w-max group/link">
+							View Case Study <svg class="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+						</a>
+					</div>
+					<!-- Image Container -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
+						<img src="./assets/neuriq.PNG" alt="NeurIQ Dashboard" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
+
+				<!-- Project 3: PaperHunterAgent -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="flex flex-wrap gap-2 mb-4">
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
+								Research Agent / Quantum ML
+							</div>
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
+								Research
+							</div>
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">PaperHunterAgent</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							Automatically searches arXiv and Semantic Scholar for the latest quantum science papers, filters by relevance, and generates structured Markdown summaries with concept maps. Built for PhD students and researchers who need dense, structured digests of new papers without manual scraping — complete with TL;DR, key equations, and Mermaid graphs.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Reduces literature review time by providing relevance-scored summaries of 5–10 papers in under 5 minutes."
+						</div>
+
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">arXiv API</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Semantic Scholar</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">CLI Tool</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Mermaid Maps</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://github.com/madara88645/PaperHunterAgent" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container / Placeholder -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
+						<img src="./assets/9f92b06d-6fa1-4082-99eb-09f930bca96b.png" alt="PaperHunterAgent Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
+
+				<!-- Project 4: VibeGraph -->
+				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
+					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
+						<div class="flex flex-wrap gap-2 mb-4">
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
+								Code Learning / AST Analysis
+							</div>
+							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
+								Learning Tool
+							</div>
+						</div>
+						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">VibeGraph</h3>
+						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
+							Transforms any Python codebase into an interactive call graph with node-level AI explanations, learning path suggestions, and real-time 'ghost runner' execution visualization. Designed for developers who learn by vibing with code but need structure — ask questions about any function, generate step-by-step learning orders, or watch AI traverse the execution path live.
+						</p>
+						<!-- Metric Sentence -->
+						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
+							"Enables rapid comprehension of unfamiliar codebases by visualizing structure and providing on-demand AI explanations for every node."
+						</div>
+
+						<div class="flex flex-wrap gap-2 mb-8">
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python AST</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React Flow</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Groq</span>
+							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">NetworkX</span>
+						</div>
+						<div class="flex gap-4">
+							<a href="https://github.com/madara88645/VibeGraph" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
+								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
+							</a>
+						</div>
+					</div>
+					<!-- Image Container / Placeholder -->
+					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
+						<img src="./assets/VibeGraph.PNG" alt="VibeGraph Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer / Contact -->
+	<footer class="border-t border-white/[0.05] bg-surface/20 py-20 relative overflow-hidden">
+		<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+		<div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+			<h2 class="font-heading text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Let's build something.</h2>
+			<p class="text-zinc-400 mb-10 max-w-md mx-auto text-sm md:text-base">
+				Currently open for research collaborations, software engineering internships, and deep technical discussions.
+			</p>
+            
+			<div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+				<a href="mailto:mehmet.ozel2701@gmail.com" class="px-8 py-3.5 rounded-lg bg-white text-background font-bold hover:bg-zinc-200 transition-all font-mono text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+					Get In Touch
+				</a>
+				<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="px-8 py-3.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all font-mono text-sm backdrop-blur-sm">
+					LinkedIn
+				</a>
+			</div>
+
+			<p class="text-xs text-zinc-600 font-mono flex items-center justify-center gap-2">
+				© 2026 Mehmet Özel. <span class="w-1 h-1 bg-zinc-600 rounded-full"></span> Engineered with discipline.
+			</p>
+		</div>
+	</footer>
+
+</body>
+</html>
+
