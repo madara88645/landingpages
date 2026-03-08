@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeurIQ | AI that adapts to how YOU learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#050505', 
+                        surface: '#0F0F12', 
+                        primary: '#7C3AED', 
+                        accent: '#A78BFA', 
+                        secondary: '#4C1D95', 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #E2E8F0; 
+        }
+        .bg-tech-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+        }
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, rgba(15, 15, 18, 0.6) 0%, rgba(5, 5, 5, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+        }
+        .card-hover:hover {
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.15);
+            transform: translateY(-4px);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #C4B5FD, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+        .brain-glow {
+            filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.6));
+        }
+        .bento-inner-glow {
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+        }
+        /* Perspective for hero image */
+        .perspective-container {
+            perspective: 2000px;
+        }
+        .hero-image-tilt {
+            transform: rotateX(10deg) translateY(0);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .perspective-container:hover .hero-image-tilt {
+            transform: rotateX(0deg) translateY(-10px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent selection:text-white relative overflow-x-hidden">
+
+    <!-- Ambient Background Glows & Grid -->
+    <div class="fixed inset-0 bg-tech-grid -z-20 pointer-events-none"></div>
+    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 border-b border-white/[0.03] bg-background/80 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+                <!-- Brain Logo with Dark Purple Glow -->
+                <svg class="w-8 h-8 text-[#A855F7] brain-glow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+                </svg>
+                NeurIQ
+            </a>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#about" class="text-slate-400 hover:text-white transition-colors">About</a>
+                <a href="#features" class="text-slate-400 hover:text-white transition-colors">Features</a>
+                <a href="#contact" class="text-slate-400 hover:text-white transition-colors">Contact</a>
+            </div>
+            <a href="#waitlist" class="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-primary hover:bg-violet-700 rounded-full transition-all shadow-[0_0_20px_rgba(124,58,237,0.2)] hover:shadow-[0_0_30px_rgba(124,58,237,0.4)]">
+                Join Beta
+            </a>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(124,58,237,0.1)]">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Private Beta Opening Soon
+            </div>
+            <h1 class="font-heading text-6xl md:text-8xl font-extrabold text-white tracking-tight mb-6 leading-[1.1]">
+                Learn smarter, <br class="hidden md:block"/>
+                <span class="gradient-text">not harder.</span>
+            </h1>
+            <p class="font-heading text-xl md:text-2xl text-accent mb-4 font-medium tracking-wide">AI that adapts to how YOU learn.</p>
+            <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                NeurIQ uses advanced cognitive modeling to personalize your learning journey. We match content to your unique processing style, track your progress, and help you master any subject faster.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <a href="#waitlist" class="w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-white font-semibold hover:bg-violet-700 transition-all shadow-[0_0_25px_rgba(124,58,237,0.25)] hover:shadow-[0_0_40px_rgba(124,58,237,0.4)]">
+                    Join Private Beta
+                </a>
+                <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all backdrop-blur-sm">
+                    See How It Works
+                </a>
+            </div>
+
+            <!-- Dashboard Mockup Image -->
+            <div class="perspective-container relative mx-auto w-full max-w-5xl">
+                <!-- Inner glow behind image -->
+                <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
+                <div class="hero-image-tilt rounded-2xl md:rounded-3xl border border-white/10 bg-surface/50 p-2 md:p-4 backdrop-blur-sm shadow-2xl">
+                    <img src="./assets/dashboard.PNG" alt="NeurIQ Student Dashboard" class="w-full h-auto rounded-xl md:rounded-2xl border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] opacity-95 hover:opacity-100 transition-opacity" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+
+
+</body>
+</html>

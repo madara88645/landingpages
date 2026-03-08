@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compiler | Optimize Prompts, Slash Token Costs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        background: '#020617', // Slate 950 (Very dark navy/black)
+                        surface: '#0F172A', // Slate 900 (Dark navy surface)
+                        primary: '#3B82F6', // Blue 500 (Vibrant Blue)
+                        accent: '#60A5FA', // Blue 400 (Lighter Blue)
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #E2E8F0; 
+        }
+        .bg-tech-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+        }
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.6) 0%, rgba(2, 6, 23, 0.8) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(12px);
+        }
+        .card-hover:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60A5FA, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        .terminal-glow {
+            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6));
+        }
+        .bento-inner-glow {
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+        }
+        /* Perspective for hero image */
+        .perspective-container {
+            perspective: 2000px;
+        }
+        .hero-image-tilt {
+            transform: rotateX(10deg) translateY(0);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .perspective-container:hover .hero-image-tilt {
+            transform: rotateX(0deg) translateY(-10px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-white relative overflow-x-hidden">
+
+    <!-- Ambient Background Glows & Grid -->
+    <div class="fixed inset-0 bg-tech-grid -z-20 pointer-events-none"></div>
+    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 border-b border-white/[0.03] bg-background/80 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold text-white tracking-tight flex items-center gap-3 font-mono">
+                <!-- Terminal/Code Logo with Cyan Glow -->
+                <svg class="w-8 h-8 text-primary terminal-glow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 17 10 11 4 5"></polyline>
+                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+                Compiler
+            </a>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#features" class="text-slate-400 hover:text-white transition-colors">Features</a>
+                <a href="#about" class="text-slate-400 hover:text-white transition-colors">About</a>
+                <a href="https://github.com/madara88645/Compiler" target="_blank" class="text-slate-400 hover:text-white transition-colors">GitHub</a>
+            </div>
+            <a href="https://github.com/madara88645/Compiler" target="_blank" class="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-blue-600 rounded-lg transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] font-mono">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                View Code
+            </a>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 md:pt-48 md:pb-32 px-6">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(59,130,246,0.1)] font-mono">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                v1.0 is Live
+            </div>
+            <h1 class="font-heading text-6xl md:text-8xl font-extrabold text-white tracking-tight mb-6 leading-[1.1]">
+                Optimize Prompts. <br class="hidden md:block"/>
+                <span class="gradient-text">Slash Token Costs.</span>
+            </h1>
+            <p class="font-heading text-xl md:text-2xl text-accent mb-4 font-medium tracking-wide">The ultimate compiler for LLM interactions.</p>
+            <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                Stop wasting tokens on verbose prompts. Compiler uses advanced heuristics and AI to compress your context, manage RAG pipelines locally, and integrate directly into your workflow.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <a href="https://compiler-git-main-madara88645s-projects.vercel.app/" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-lg bg-primary text-white font-bold hover:bg-blue-600 transition-all shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] font-mono flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    Open Web App
+                </a>
+                <a href="https://chromewebstore.google.com/detail/jnnjjcmfabmanpjkjfmfhnhjinbalgfd?utm_source=item-share-cb" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-lg border border-white/10 hover:border-primary/50 bg-white/5 hover:bg-white/10 text-white font-bold transition-all backdrop-blur-sm font-mono flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10zm-1.898-13.882l-2.023 3.504C6.19 12.023 5.4 12.015 5.4 12.015c.676-3.235 3.526-5.698 6.945-5.698 1.488 0 2.868.455 4.02 1.237l-2.062 3.57c-.636-1.168-1.854-1.96-3.266-1.96h-.033zm8.47 5.753l-3.528-6.11c1.373 1.107 2.256 2.802 2.256 4.708 0 .524-.07 1.033-.193 1.517H12c1.465 0 2.76.684 3.6 1.745l.972-1.86zm-5.125 5.772l-1.97-3.41c.218.067.45.105.69.105 2.14 0 3.88-1.74 3.88-3.88 0-.498-.095-.974-.266-1.413h3.873c.338 1.018.524 2.115.524 3.257 0 4.418-3.582 8-8 8-.996 0-1.95-.184-2.84-.522l2.108-3.65v.003-.003c.518.796 1.405 1.326 2.41 1.326.13 0 .26-.007.39-.022v-.002zm-3.69-.328L7.696 15.65C6.67 14.88 6 13.633 6 12.223c0-.022 0-.044.002-.066H9.72c-.085.347-.13.71-.13 1.083 0 1.25.495 2.384 1.3 3.22l-1.134 1.964v-.002c-.87-.414-1.637-.992-2.26-1.688l2.26-3.914h3.765l-3.764 6.52v.002c-.563-.263-1.082-.596-1.545-.986zM12 8.682c1.833 0 3.318 1.485 3.318 3.318s-1.485 3.318-3.318 3.318-3.318-1.485-3.318-3.318 1.485-3.318 3.318-3.318z"/></svg>
+                    Chrome Extension
+                </a>
+            </div>
+
+            <!-- Dashboard Mockup Image -->
+            <div class="perspective-container relative mx-auto w-full max-w-5xl">
+                <!-- Inner glow behind image -->
+                <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full -z-10"></div>
+                <div class="hero-image-tilt rounded-2xl md:rounded-3xl border border-white/10 bg-surface/50 p-2 md:p-4 backdrop-blur-sm shadow-2xl">
+                    <img src="../assets/comp1.PNG" alt="Prompt Compiler UI" class="w-full h-auto rounded-xl md:rounded-2xl border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] opacity-95 hover:opacity-100 transition-opacity" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (Bento Grid) -->
+    <section id="features" class="py-24 border-t border-white/[0.05] relative">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+        
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-xs font-bold text-primary tracking-widest uppercase mb-2 font-mono">// Engine Specs</h2>
+                <h3 class="font-heading text-4xl md:text-5xl font-bold text-white mb-4">Engineered for Efficiency.</h3>
+                <p class="text-slate-400">Everything you need to manipulate context windows, optimize token usage, and run heuristic processing locally without unnecessary API calls.</p>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[240px]">
+                
+                <!-- Feature 1: Token Optimizer (Large Square) -->
+                <div class="md:col-span-2 md:row-span-2 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col bg-surface/40">
+                    <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    <!-- Mockup Container -->
+                    <div class="relative w-full h-64 mb-6 rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+                        <img src="../assets/comp2 token optimizer.PNG" alt="Token Optimizer Engine" class="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent opacity-80"></div>
+                    </div>
+                    <div class="relative z-10 mt-auto">
+                        <div class="inline-flex items-center gap-2 px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs font-mono font-bold uppercase mb-2">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            Compress
+                        </div>
+                        <h4 class="font-heading text-2xl font-bold text-white mb-2 tracking-wide">Token Optimizer</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">Reduce LLM costs without losing meaning. Set your max token limit and let our compression algorithm distill your verbose prompts into hyper-efficient queries.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Browser Integration (Wide Rectangle) -->
+                <div class="md:col-span-2 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 md:p-8 card-hover bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center bg-surface/40">
+                    <div class="w-full md:w-1/2 relative z-10">
+                        <h4 class="font-heading text-xl font-bold text-white mb-2 tracking-wide">Seamless Integration</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed pr-4">Optimize right where you type. A native 'Optimize' button integrates directly into your favorite AI chat interfaces like ChatGPT.</p>
+                    </div>
+                    <!-- Image Right -->
+                    <div class="absolute right-0 top-0 w-full md:w-3/5 h-full z-0 border-l border-white/5">
+                        <div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 to-transparent z-10"></div>
+                        <img src="../assets/chatgpt.PNG" alt="ChatGPT Integration" class="h-full w-full object-cover object-left opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+                    </div>
+                </div>
+
+                <!-- Feature 3 (Small Square) -->
+                <div class="md:col-span-1 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col justify-between bg-surface/40">
+                    <svg class="w-8 h-8 text-primary/50 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                    <div>
+                        <h4 class="font-heading text-lg font-bold text-white mb-2">Context Manager</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Ingest local files and folders effortlessly for built-in RAG workflows.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 (Small Square) -->
+                <div class="md:col-span-1 md:row-span-1 border border-white/[0.08] rounded-3xl p-6 card-hover bento-inner-glow relative overflow-hidden group flex flex-col justify-between bg-surface/40">
+                    <svg class="w-8 h-8 text-accent/50 group-hover:text-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                    <div>
+                        <h4 class="font-heading text-lg font-bold text-white mb-2">Live Sync</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Real-time prompt compilation and status checking directly from the UI.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5: Offline Heuristics (Full Width Bottom + Background Image) -->
+                <div class="md:col-span-4 md:row-span-1 border border-white/[0.08] rounded-3xl p-0 card-hover bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-stretch bg-surface/40">
+                    <div class="p-6 md:p-8 md:w-1/2 relative z-10 flex flex-col justify-center">
+                        <div class="inline-flex items-center gap-2 px-2 py-1 rounded bg-slate-800 text-slate-300 w-max text-xs font-mono font-bold uppercase mb-3 border border-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-slate-500"></span> Offline Mode
+                        </div>
+                        <h4 class="font-heading text-2xl font-bold text-white mb-2 tracking-wide">Offline Heuristic Engine</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed max-w-md">Why send data out when you can process it locally? Fast, local heuristic compilation without making a single LLM call. Keep your data private and your latency at zero.</p>
+                    </div>
+                    <!-- Background image filling the rest -->
+                    <div class="absolute right-0 top-0 w-full md:w-2/3 h-full z-0 overflow-hidden border-l border-white/5">
+                        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-surface via-surface/90 to-transparent z-10"></div>
+                        <img src="../assets/comp3 offline heuristics.PNG" alt="Offline Heuristic Engine" class="w-full h-full object-cover object-left-top opacity-50 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer / Call to Action -->
+    <section id="about" class="py-24 border-t border-white/[0.02] bg-surface/30">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <svg class="w-12 h-12 text-primary mx-auto mb-6 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 font-heading">Built for Developers, by a Developer.</h3>
+            <p class="text-lg text-slate-400 mb-8 leading-relaxed max-w-2xl mx-auto">
+                I'm Mehmet, a Data Science & AI student. I built Compiler because working with LLM APIs shouldn't cost a fortune in wasted tokens. It's open-source, fast, and runs perfectly on your local machine.
+            </p>
+            <div class="flex justify-center gap-6">
+                <a href="https://github.com/madara88645/Compiler" target="_blank" class="text-slate-400 hover:text-primary transition-colors flex items-center gap-2 font-mono text-sm">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                    Follow on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#050505] py-10">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                <span class="text-white font-bold font-mono">Compiler</span>
+            </div>
+            <p class="text-xs text-slate-500 font-mono">Â© 2026 Mehmet Ozel. Open source.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
