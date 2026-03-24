@@ -3,405 +3,328 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Mehmet Özel | AI & Data Science</title>
-	<script src="https://cdn.tailwindcss.com"></script>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-	<script>
-		tailwind.config = {
-			theme: {
-				extend: {
-					fontFamily: {
-						sans: ['Inter', 'sans-serif'],
-						heading: ['Outfit', 'sans-serif'],
-						mono: ['Fira Code', 'monospace'],
-					},
-					colors: {
-						background: '#09090B', /* Zinc 950 */
-						surface: '#121214', /* Slightly darker than Zinc 900 for more depth */
-						primary: '#9B7FE8', /* Ice Purple */
-						accent: '#F43F5E', /* Rose/Crimson */
-					}
-				}
-			}
-		}
-	</script>
+	<title>Mehmet Özel | AI & Data Science — Glass Fusion</title>
+	<meta name="description" content="Mehmet Özel — AI & Data Science portfolio. Mesh gradients, 3D hover, diagonal sections.">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
-		body {
-			background-color: #09090B;
-			color: #D4D4D8;
-		}
-        
-		/* Refined Dot Pattern */
-		.bg-dot-pattern {
-			background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-			background-size: 24px 24px;
-			mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
-			-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
-		}
+		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#9B7FE8;--primary-l:#CFBDFF;--accent:#F43F5E;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace}
+		*{margin:0;padding:0;box-sizing:border-box}
+		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+		::selection{background:rgba(155,127,232,0.25);color:#fff}
 
-		/* Upgraded Premium Card Hover */
-		.card-hover {
-			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-			background: linear-gradient(145deg, rgba(24, 24, 27, 0.4) 0%, rgba(9, 9, 11, 0.8) 100%);
-			backdrop-filter: blur(12px);
-			border: 1px solid rgba(255, 255, 255, 0.05);
-		}
-		.card-hover:hover {
-			box-shadow: 0 8px 40px rgba(155, 127, 232, 0.08);
-			transform: translateY(-4px);
-			border-color: rgba(155, 127, 232, 0.25);
-		}
-		.project-card:hover {
-			box-shadow: 0 8px 40px rgba(244, 63, 94, 0.08);
-			border-color: rgba(244, 63, 94, 0.25);
-		}
+		/* ── MESH GRADIENT BACKGROUND ── */
+		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
+		.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:drift 25s ease-in-out infinite alternate}
+		.mb1{width:700px;height:600px;background:rgba(155,127,232,0.07);top:-15%;left:20%;animation-delay:0s}
+		.mb2{width:500px;height:500px;background:rgba(244,63,94,0.04);bottom:5%;right:-5%;animation-delay:-8s}
+		.mb3{width:600px;height:500px;background:rgba(100,80,200,0.04);top:40%;left:-15%;animation-delay:-15s}
+		.mb4{width:400px;height:400px;background:rgba(244,63,94,0.03);top:-5%;right:20%;animation-delay:-5s}
+		@keyframes drift{0%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.05)}50%{transform:translate(-20px,50px) scale(0.95)}75%{transform:translate(30px,20px) scale(1.02)}100%{transform:translate(-10px,-40px) scale(1)}}
 
-		/* Modern Text Gradients */
-		.gradient-text {
-			background: linear-gradient(135deg, #9B7FE8 0%, #F43F5E 100%);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
-		.text-glow {
-			text-shadow: 0 0 30px rgba(155, 127, 232, 0.4);
-		}
-		.white-gradient-text {
-			background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
+		/* Grid overlay */
+		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
+			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
 
-		/* Subtle Inner Glow for depth */
-		.bento-inner-glow {
-			box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+		/* ── NAV — Full-width glass bar + accent underline ── */
+		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(155,127,232,0.15),rgba(244,63,94,0.1),transparent)}
+		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
+		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fh);font-weight:700;font-size:1.25rem;color:#fff}
+		.nlogo img{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(155,127,232,0.25);transition:border-color 0.3s}
+		.nlogo:hover img{border-color:var(--primary)}
+		.nlogo .hl{color:var(--primary)}
+		.nlinks{display:flex;gap:2.5rem;list-style:none}
+		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
+		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
+		.nlinks a:hover{color:#fff}
+		.nlinks a:hover::after{width:100%}
+		.ncta{padding:0.5rem 1.4rem;font-family:var(--fl);font-size:0.7rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--primary-l),var(--primary));border:none;border-radius:8px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(155,127,232,0.15)}
+		.ncta:hover{box-shadow:0 0 30px rgba(155,127,232,0.25);transform:translateY(-1px)}
+
+		/* ── HERO — Full-width with perspective 3D layer ── */
+		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem;position:relative;perspective:1200px}
+		.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+		.hero-text{position:relative;z-index:2}
+		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;
+			background:rgba(155,127,232,0.06);border:1px solid rgba(155,127,232,0.12);font-family:var(--fl);font-size:0.62rem;
+			color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
+		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
+		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,5vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.5rem}
+		.hero h1 .w{display:block;background:linear-gradient(180deg,#fff 0%,#888 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+		.hero-desc{font-size:1rem;color:var(--text3);max-width:480px;margin-bottom:2.5rem;font-weight:300;line-height:1.8}
+		.hero-desc strong{color:var(--text2);font-weight:500}
+		.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.8rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--primary-l),var(--primary));border:none;border-radius:8px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(155,127,232,0.2)}
+		.btn-pri:hover{box-shadow:0 0 40px rgba(155,127,232,0.3);transform:translateY(-2px)}
+		.btn-pri svg{width:14px;height:14px;transition:transform 0.3s}
+		.btn-pri:hover svg{transform:translateX(4px)}
+		.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.8rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all 0.3s}
+		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+
+		/* 3D floating browser window mockup */
+		.hero-visual{position:relative;z-index:1;transform:rotateY(-8deg) rotateX(4deg);transform-style:preserve-3d;transition:transform 0.6s ease}
+		.hero:hover .hero-visual{transform:rotateY(-3deg) rotateX(2deg)}
+		.browser-mock{background:var(--s2);border:1px solid var(--border);border-radius:16px;overflow:hidden;
+			box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(155,127,232,0.05)}
+		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
+		.browser-bar .d{width:10px;height:10px;border-radius:50%}
+		.d-r{background:#F43F5E}
+		.d-y{background:#EAB308}
+		.d-g{background:#22C55E}
+		.browser-body{height:300px;overflow:hidden;position:relative}
+		.browser-body img{width:100%;height:100%;object-fit:cover;object-position:left top;opacity:0.85}
+
+		/* ── DIAGONAL SECTION TRANSITIONS ── */
+		.diag-top{position:relative;margin-top:-60px;padding-top:120px}
+		.diag-top::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:var(--bg);clip-path:polygon(0 0,100% 0,100% 30%,0 100%)}
+
+		/* ── ABOUT — Floating glass cards with 3D tilt ── */
+		.about{padding:5rem 3rem 7rem;background:var(--s1);position:relative}
+		.about-inner{max-width:1200px;margin:0 auto}
+		.sec-tag{display:inline-flex;align-items:center;gap:0.75rem;font-family:var(--fl);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3rem}
+		.sec-tag.rose{color:var(--accent)}.sec-tag.rose::before{content:'';width:2rem;height:1px;background:rgba(244,63,94,0.5)}
+		.sec-tag.purple{color:var(--primary)}.sec-tag.purple::before{content:'';width:2rem;height:1px;background:rgba(155,127,232,0.5)}
+
+		.about-flex{display:flex;gap:1.5rem;flex-wrap:wrap}
+		.g-card{flex:1;min-width:280px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+			border:1px solid var(--border);border-radius:20px;padding:2rem;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+			position:relative;overflow:hidden;transform-style:preserve-3d}
+		.g-card::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;
+			background:linear-gradient(135deg,rgba(155,127,232,0.1),transparent 50%,rgba(244,63,94,0.05));
+			-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
+		.g-card:hover::before{opacity:1}
+		.g-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 40px rgba(155,127,232,0.06)}
+		.g-card.wide{flex:2;min-width:500px}
+
+		.g-card .bimg{width:100%;height:120px;border-radius:14px;overflow:hidden;margin-bottom:1.5rem;position:relative}
+		.g-card .bimg img{width:100%;height:100%;object-fit:cover;opacity:0.7;transition:opacity 0.4s}
+		.g-card:hover .bimg img{opacity:0.9}
+		.g-card .bimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 60%)}
+
+		.g-card h3{font-family:var(--fh);font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:0.15rem}
+		.g-card .meta{font-family:var(--fl);font-size:0.7rem;color:var(--primary);margin-bottom:0.75rem}
+		.g-card p{font-size:0.86rem;color:var(--text3);line-height:1.65}
+		.g-icon{width:42px;height:42px;border-radius:12px;background:rgba(155,127,232,0.06);border:1px solid rgba(155,127,232,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+		.g-icon svg{width:20px;height:20px;color:var(--primary)}
+		.ext-b{display:inline-flex;padding:0.2rem 0.55rem;font-family:var(--fl);font-size:0.55rem;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;text-decoration:none}
+		.stk-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem}
+		.stk{padding:0.3rem 0.65rem;font-family:var(--fl);font-size:0.66rem;font-weight:500;border-radius:6px}
+		.stk-p{background:rgba(155,127,232,0.08);color:var(--primary-l);border:1px solid rgba(155,127,232,0.2)}
+		.stk-r{background:rgba(244,63,94,0.08);color:var(--accent);border:1px solid rgba(244,63,94,0.2)}
+		.stk-n{background:rgba(255,255,255,0.03);color:#ccc;border:1px solid var(--border)}
+
+		/* ── PROJECTS — Full-width image top cards with neon glow ── */
+		.projects{padding:7rem 3rem;background:var(--bg);position:relative}
+		.proj-inner{max-width:1200px;margin:0 auto}
+		.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+
+		.pc{background:var(--s1);border:1px solid var(--border);border-radius:20px;overflow:hidden;
+			transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative}
+		.pc::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.5s;border-radius:20px;
+			background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(155,127,232,0.05),transparent 40%);pointer-events:none}
+		.pc:hover::after{opacity:1}
+		.pc:hover{border-color:rgba(155,127,232,0.15);transform:translateY(-6px);
+			box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 50px rgba(155,127,232,0.06)}
+		.pc.full{grid-column:span 2}
+
+		.pc-img{width:100%;height:220px;overflow:hidden;position:relative;background:var(--bg)}
+		.pc.full .pc-img{height:280px}
+		.pc-img img{width:100%;height:100%;object-fit:cover;opacity:0.7;transition:all 0.5s}
+		.pc:hover .pc-img img{opacity:1;transform:scale(1.03)}
+		.pc-img .flag{position:absolute;top:1rem;right:1rem;padding:0.2rem 0.6rem;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);
+			border:1px solid rgba(255,255,255,0.08);border-radius:4px;font-family:var(--fl);font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em}
+		/* Neon bottom edge */
+		.pc-img::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;
+			background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:0;transition:opacity 0.4s}
+		.pc:hover .pc-img::after{opacity:0.5}
+
+		.pc-body{padding:2rem}
+		.pcat{display:inline-flex;padding:0.25rem 0.6rem;margin-right:0.35rem;margin-bottom:0.75rem;font-family:var(--fl);font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;border-radius:4px}
+		.pcat-r{background:rgba(244,63,94,0.08);color:var(--accent);border:1px solid rgba(244,63,94,0.15)}
+		.pcat-p{background:rgba(155,127,232,0.08);color:var(--primary);border:1px solid rgba(155,127,232,0.15)}
+		.pname{font-family:var(--fh);font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
+		.pdesc{font-size:0.88rem;color:var(--text3);line-height:1.7;margin-bottom:0.75rem}
+		.pquote{padding-left:1rem;border-left:2px solid rgba(155,127,232,0.2);font-style:italic;font-size:0.82rem;color:var(--text2);margin-bottom:1rem;line-height:1.6}
+		.pquote.rb{border-left-color:rgba(244,63,94,0.2)}
+		.ptags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:1rem}
+		.plinks{display:flex;gap:1.5rem}
+		.plinks a{display:inline-flex;align-items:center;gap:0.3rem;font-family:var(--fl);font-size:0.75rem;font-weight:600;text-decoration:none;transition:color 0.3s}
+		.plinks a svg{width:14px;height:14px;transition:transform 0.3s}
+		.plinks a:hover svg{transform:translate(2px,-2px)}
+		.lw{color:#fff}.lw:hover{color:var(--accent)}
+		.ld{color:var(--text3)}.ld:hover{color:#fff}
+
+		/* ── FOOTER ── */
+		.footer{padding:7rem 3rem;text-align:center;background:var(--s1);position:relative;overflow:hidden}
+		.footer::before{content:'';position:absolute;bottom:-10%;left:50%;transform:translateX(-50%);width:600px;height:300px;
+			background:radial-gradient(ellipse,rgba(155,127,232,0.04),transparent 70%);filter:blur(80px);pointer-events:none}
+		.footer h2{font-family:var(--fh);font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:#fff;margin-bottom:1rem;letter-spacing:-0.02em;position:relative;z-index:1}
+		.footer>p{color:var(--text3);margin-bottom:2.5rem;max-width:440px;margin-left:auto;margin-right:auto;font-size:0.92rem;position:relative;z-index:1}
+		.fbtns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem;position:relative;z-index:1}
+		.fcopy{font-family:var(--fl);font-size:0.65rem;color:#2a2a35;position:relative;z-index:1}
+
+		/* ── SCROLL ── */
+		.sr{opacity:0;transform:translateY(35px);transition:all 0.7s ease}
+		.sr.v{opacity:1;transform:translateY(0)}
+
+		@media(max-width:1024px){
+			.hero-inner{grid-template-columns:1fr}.hero-visual{display:none}
+			.proj-grid{grid-template-columns:1fr}.pc.full{grid-column:span 1}
+			.about-flex{flex-direction:column}.g-card.wide{min-width:unset}
+			.nlinks,.ncta{display:none}
 		}
 	</style>
 </head>
-<body class="antialiased selection:bg-primary/30 selection:text-white relative overflow-x-hidden">
+<body>
 
-	<!-- Ambient Background Glows -->
-	<div class="fixed inset-0 bg-dot-pattern -z-20 pointer-events-none"></div>
-	<!-- Adjusted main glow to be more focal around the hero text -->
-	<div class="fixed top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-	<div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+<div class="mesh-bg"><div class="mesh-blob mb1"></div><div class="mesh-blob mb2"></div><div class="mesh-blob mb3"></div><div class="mesh-blob mb4"></div></div>
+<div class="grid-overlay"></div>
 
-	<!-- Navigation -->
-	<nav class="fixed w-full z-50 top-0 border-b border-white/[0.04] bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
-		<div class="max-w-6xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
-			<!-- Logo/Name with Profile Picture -->
-			<a href="#" class="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-3 font-heading group">
-				<!-- Profile Picture Container -->
-				<div class="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-primary/20 group-hover:border-primary/50 transition-colors relative">
-					<img src="./assets/userprofilepicture.png" alt="Mehmet Özel" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=MÖ'"/>
-					<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
-				</div>
-				<!-- Name -->
-				<span>
-					<span class="text-primary">M</span>Özel.
-				</span>
-			</a>
+<!-- NAV -->
+<nav class="nav"><div class="nav-in">
+	<a href="#" class="nlogo"><img src="./assets/userprofilepicture.png" alt="MÖ" onerror="this.src='https://via.placeholder.com/32?text=MÖ'"><span><span class="hl">M</span>Özel.</span></a>
+	<ul class="nlinks"><li><a href="#about">About</a></li><li><a href="#projects">Projects</a></li><li><a href="#contact">Contact</a></li></ul>
+	<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="ncta">Connect</a>
+</div></nav>
 
-			<div class="hidden md:flex gap-8 text-sm font-medium">
-				<a href="#about" class="text-zinc-400 hover:text-white transition-colors">About</a>
-				<a href="#projects" class="text-zinc-400 hover:text-white transition-colors">Projects</a>
-				<a href="#experience" class="text-zinc-400 hover:text-white transition-colors">Experience</a>
-			</div>
-			<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-background bg-white hover:bg-zinc-200 rounded-md transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)]">
-				Connect
-			</a>
-		</div>
-	</nav>
-
-	<!-- Hero Section -->
-	<section class="relative pt-36 pb-20 md:pt-48 md:pb-32 px-6 flex flex-col justify-center min-h-[90vh]">
-		<!-- Focal container for dramatic effect -->
-		<div class="max-w-4xl mx-auto relative z-10 w-full">
-			<div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent blur-3xl -z-10 rounded-full opacity-50"></div>
-            
-			<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-zinc-300 text-[10px] md:text-xs font-mono font-medium tracking-wider mb-8 backdrop-blur-md">
-				<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#9B7FE8]"></span>
-				AI & Data Science @ Bournemouth University
-			</div>
-            
-			<!-- Mobile-first hierarchy for heading -->
-			<h1 class="font-heading text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-[1.05]">
-				<span class="white-gradient-text block mb-2">Building Production-</span>
-				<span class="gradient-text text-glow">Grade ML Tools.</span>
-			</h1>
-            
-			<p class="text-base md:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed font-light">
-				I'm Mehmet. I specialize in <strong class="text-zinc-200 font-medium">LLM tooling</strong>, <strong class="text-zinc-200 font-medium">adaptive learning systems</strong>, and cognitive-inspired AI. Focused on shipping robust, cloud-native products that solve real problems.
-			</p>
-            
-			<div class="flex flex-col sm:flex-row gap-4 mb-8">
-				<a href="#projects" class="px-6 py-3 md:px-8 md:py-4 rounded-lg bg-primary text-background font-semibold hover:bg-purple-400 transition-all shadow-[0_0_20px_rgba(155,127,232,0.25)] hover:shadow-[0_0_30px_rgba(155,127,232,0.4)] font-mono text-sm flex items-center justify-center group">
-					View Selected Works
-					<svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-				</a>
+<!-- HERO -->
+<section class="hero">
+	<div class="hero-inner">
+		<div class="hero-text">
+			<div class="hero-chip"><span class="dot"></span>AI & Data Science @ Bournemouth University</div>
+			<h1><span class="w">Building Production-</span><span class="g">Grade ML Tools.</span></h1>
+			<p class="hero-desc">I'm Mehmet. I specialize in <strong>LLM tooling</strong>, <strong>adaptive learning systems</strong>, and cognitive-inspired AI. Focused on shipping robust, cloud-native products that solve real problems.</p>
+			<div class="hero-btns">
+				<a href="#projects" class="btn-pri">View Selected Works <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
+				<a href="mailto:mehmet.ozel2701@gmail.com" class="btn-sec">Get In Touch</a>
 			</div>
 		</div>
-	</section>
-
-	<!-- About / Bento Grid Section -->
-	<section id="about" class="py-24 border-t border-white/[0.05] relative">
-		<div class="max-w-5xl mx-auto px-6">
-			<h2 class="text-xs font-bold text-accent tracking-widest uppercase mb-10 font-mono flex items-center gap-3">
-				<span class="w-8 h-[1px] bg-accent/50"></span>
-				Identity & Focus
-			</h2>
-            
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                
-				<!-- Medium Writer Card -->
-				<div class="md:col-span-2 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
-					<!-- Banner Image -->
-					<div class="w-full h-28 md:h-36 relative overflow-hidden border-b border-white/[0.02]">
-						<img src="./assets/mediumbanner.PNG" alt="Medium Profile Banner" class="w-full h-full object-cover object-center opacity-80" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
-						<!-- Gradient overlay for smooth blending -->
-						<div class="absolute inset-0 bg-gradient-to-t from-[#121214]/80 via-transparent to-transparent"></div>
-					</div>
-                    
-					<div class="flex flex-col space-y-1.5 p-6 md:p-8 pt-6">
-						<div class="flex items-start justify-between mb-2">
-							<div>
-								<h3 class="font-semibold tracking-tight font-heading text-xl md:text-2xl text-zinc-100">Publication Editor</h3>
-								<p class="text-sm text-primary font-mono mt-1">220+ Published Articles</p>
-							</div>
-							<a href="https://medium.com/@mehmet.ozel2701" target="_blank" class="inline-flex items-center rounded bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-mono tracking-wider uppercase text-zinc-400">Medium</a>
-						</div>
-					</div>
-					<div class="p-6 md:p-8 pt-0 text-sm md:text-base text-zinc-400 leading-relaxed mt-auto">
-						Authoring and editing technical content focused on AI architecture and software engineering. I break down complex models into practical, actionable insights for developers.
-					</div>
-				</div>
-
-				<!-- Cognitive AI Card -->
-				<div class="md:col-span-1 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
-					<div class="flex flex-col space-y-1.5 p-6 md:p-8">
-						<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 border border-primary/20">
-							<svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-						</div>
-						<h3 class="font-semibold tracking-tight font-heading text-lg text-zinc-100">Cognitive AI</h3>
-					</div>
-					<div class="p-6 md:p-8 pt-0 text-sm text-zinc-400 mt-auto leading-relaxed">
-						Designing systems inspired by human learning dynamics—focusing on attention mechanisms, memory retention, and rigorous model evaluation.
-					</div>
-				</div>
-
-				<!-- Core Stack & Certs Card -->
-				<div class="md:col-span-3 rounded-2xl bg-surface/40 text-white flex flex-col card-hover bento-inner-glow overflow-hidden">
-					<div class="flex flex-col md:flex-row md:items-center justify-between p-6 md:p-8 gap-6">
-						<div class="max-w-md">
-							<h3 class="font-semibold tracking-tight font-heading text-xl text-zinc-100 mb-2">Tech Stack & Infrastructure</h3>
-							<p class="text-sm text-zinc-400">Certified cloud practitioner building scalable, modern AI applications.</p>
-						</div>
-                        
-						<div class="flex flex-wrap gap-2 md:justify-end flex-1">
-							<!-- Premium Badges -->
-							<span class="inline-flex items-center rounded bg-primary/10 border border-primary/30 px-3 py-1.5 text-xs font-mono font-medium text-primary shadow-[0_0_15px_rgba(155,127,232,0.15)]">AWS Cloud Practitioner</span>
-							<span class="inline-flex items-center rounded bg-accent/10 border border-accent/30 px-3 py-1.5 text-xs font-mono font-medium text-accent shadow-[0_0_15px_rgba(244,63,94,0.15)]">AWS AI Practitioner</span>
-                            
-							<!-- Standard Stack -->
-							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Next.js</span>
-							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">FastAPI</span>
-							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">PyTorch</span>
-							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Tailwind</span>
-							<span class="inline-flex items-center rounded bg-white/5 border border-white/10 px-3 py-1.5 text-xs font-medium text-zinc-300">Docker</span>
-						</div>
-					</div>
-				</div>
-
+		<div class="hero-visual">
+			<div class="browser-mock">
+				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
+				<div class="browser-body"><img src="./assets/comp1.PNG" alt="Compiler Preview" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
 			</div>
 		</div>
-	</section>
+	</div>
+</section>
 
-	<!-- Selected Works / Projects -->
-	<section id="projects" class="py-24 border-t border-white/[0.05] relative">
-		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/5 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
-		<div class="max-w-5xl mx-auto px-6">
-			<h2 class="text-xs font-bold text-primary tracking-widest uppercase mb-12 font-mono flex items-center gap-3">
-				<span class="w-8 h-[1px] bg-primary/50"></span>
-				Shipped Products
-			</h2>
-
-			<div class="space-y-8 md:space-y-12">
-                
-				<!-- Project 1: Compiler (Flagship) -->
-				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
-					<!-- Flagship Badge -->
-					<div class="absolute top-6 right-6 px-3 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-						Flagship
-					</div>
-
-					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
-						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase mb-4 border border-accent/20">
-							LLM Optimizer
-						</div>
-						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">Compiler</h3>
-						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
-							A prompt optimization engine built to slash LLM token costs without degrading output quality. Features a local heuristic engine, RAG context management, and a seamless Chrome extension.
-						</p>
-						<!-- Metric Sentence -->
-						<div class="mb-6 pl-4 border-l-2 border-accent/30 text-sm text-zinc-300 italic">
-							"Early benchmarks demonstrate up to a 40% reduction in token usage while preserving task performance."
-						</div>
-
-						<div class="flex flex-wrap gap-2 mb-8">
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Heuristics Engine</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Chrome Extension</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Local RAG</span>
-						</div>
-						<div class="flex gap-4">
-							<a href="https://madara88645.github.io/landingpages/compiler/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-accent transition-colors font-mono text-sm w-max group/link">
-								Live App <svg class="w-4 h-4 ml-1 transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-							</a>
-							<a href="https://github.com/madara88645/Compiler" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
-								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
-							</a>
-						</div>
-					</div>
-					<!-- Image Container -->
-					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
-						<img src="./assets/comp1.PNG" alt="Compiler Interface" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
-					</div>
+<!-- ABOUT -->
+<section id="about" class="about diag-top">
+	<div class="about-inner">
+		<div class="sec-tag rose">Identity & Focus</div>
+		<div class="about-flex">
+			<div class="g-card wide sr">
+				<div class="bimg"><img src="./assets/mediumbanner.PNG" alt="Medium" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
+				<div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:0.4rem">
+					<div><h3>Publication Editor</h3><div class="meta">220+ Published Articles</div></div>
+					<a href="https://medium.com/@mehmet.ozel2701" target="_blank" class="ext-b">Medium</a>
 				</div>
-
-				<!-- Project 2: NeurIQ -->
-				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
-					<div class="w-full md:w-1/2 relative z-10 flex flex-col">
-						<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase mb-4 border border-primary/20">
-							Adaptive AI
-						</div>
-						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">NeurIQ</h3>
-						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
-							An adaptive learning management system leveraging cognitive AI. It utilizes metacognitive tracking and dynamic content generation to tailor education to individual learning dynamics.
-						</p>
-						<!-- Metric Sentence -->
-						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
-							"Aiming to improve knowledge retention efficiency by 30% via personalized spaced-repetition loops."
-						</div>
-
-						<div class="flex flex-wrap gap-2 mb-8">
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">DeepSeek</span>
-						</div>
-						<a href="https://madara88645.github.io/landingpages/neurIQ/" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-primary transition-colors font-mono text-sm w-max group/link">
-							View Case Study <svg class="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-						</a>
-					</div>
-					<!-- Image Container -->
-					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 bg-zinc-900 flex items-center justify-center">
-						<img src="./assets/neuriq.PNG" alt="NeurIQ Dashboard" class="w-full h-full object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'" />
-					</div>
-				</div>
-
-				<!-- Project 3: PaperHunterAgent -->
-				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row items-center gap-10 card-hover">
-					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
-						<div class="flex flex-wrap gap-2 mb-4">
-							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
-								Research Agent / Quantum ML
-							</div>
-							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
-								Research
-							</div>
-						</div>
-						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">PaperHunterAgent</h3>
-						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
-							Automatically searches arXiv and Semantic Scholar for the latest quantum science papers, filters by relevance, and generates structured Markdown summaries with concept maps. Built for PhD students and researchers who need dense, structured digests of new papers without manual scraping — complete with TL;DR, key equations, and Mermaid graphs.
-						</p>
-						<!-- Metric Sentence -->
-						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
-							"Reduces literature review time by providing relevance-scored summaries of 5–10 papers in under 5 minutes."
-						</div>
-
-						<div class="flex flex-wrap gap-2 mb-8">
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">arXiv API</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Semantic Scholar</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">CLI Tool</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Mermaid Maps</span>
-						</div>
-						<div class="flex gap-4">
-							<a href="https://github.com/madara88645/PaperHunterAgent" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
-								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
-							</a>
-						</div>
-					</div>
-					<!-- Image Container / Placeholder -->
-					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
-						<img src="./assets/9f92b06d-6fa1-4082-99eb-09f930bca96b.png" alt="PaperHunterAgent Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
-					</div>
-				</div>
-
-				<!-- Project 4: VibeGraph -->
-				<div class="project-card rounded-3xl p-6 md:p-10 bg-surface/60 bento-inner-glow relative overflow-hidden group flex flex-col md:flex-row-reverse items-center gap-10 card-hover">
-					<div class="w-full md:w-1/2 relative z-10 flex flex-col pt-6 md:pt-0">
-						<div class="flex flex-wrap gap-2 mb-4">
-							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-accent/10 text-accent w-max text-[10px] font-mono font-bold uppercase border border-accent/20">
-								Code Learning / AST Analysis
-							</div>
-							<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-primary/10 text-primary w-max text-[10px] font-mono font-bold uppercase border border-primary/20">
-								Learning Tool
-							</div>
-						</div>
-						<h3 class="font-heading text-3xl md:text-4xl font-bold text-white mb-3">VibeGraph</h3>
-						<p class="text-zinc-400 mb-4 text-sm md:text-base leading-relaxed">
-							Transforms any Python codebase into an interactive call graph with node-level AI explanations, learning path suggestions, and real-time 'ghost runner' execution visualization. Designed for developers who learn by vibing with code but need structure — ask questions about any function, generate step-by-step learning orders, or watch AI traverse the execution path live.
-						</p>
-						<!-- Metric Sentence -->
-						<div class="mb-6 pl-4 border-l-2 border-primary/30 text-sm text-zinc-300 italic">
-							"Enables rapid comprehension of unfamiliar codebases by visualizing structure and providing on-demand AI explanations for every node."
-						</div>
-
-						<div class="flex flex-wrap gap-2 mb-8">
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Python AST</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">React Flow</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">FastAPI</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">Groq</span>
-							<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] text-zinc-300 font-medium">NetworkX</span>
-						</div>
-						<div class="flex gap-4">
-							<a href="https://github.com/madara88645/VibeGraph" target="_blank" class="inline-flex items-center text-zinc-400 hover:text-white transition-colors font-mono text-sm w-max">
-								Source Code <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"></path></svg>
-							</a>
-						</div>
-					</div>
-					<!-- Image Container / Placeholder -->
-					<div class="w-full md:w-1/2 relative h-56 md:h-72 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
-						<img src="./assets/Bannervibe.png" alt="VibeGraph Interface" class="w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'" />
-					</div>
-				</div>
-
+				<p>Authoring and editing technical content focused on AI architecture and software engineering. I break down complex models into practical, actionable insights for developers.</p>
+			</div>
+			<div class="g-card sr">
+				<div class="g-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
+				<h3>Cognitive AI</h3>
+				<p style="margin-top:0.75rem">Designing systems inspired by human learning dynamics—focusing on attention mechanisms, memory retention, and rigorous model evaluation.</p>
 			</div>
 		</div>
-	</section>
+		<div class="about-flex" style="margin-top:1.5rem">
+			<div class="g-card sr" style="flex:1;min-width:100%">
+				<div style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap">
+					<div style="max-width:380px"><h3>Tech Stack & Infrastructure</h3><p style="margin-top:0.4rem">Certified cloud practitioner building scalable, modern AI applications.</p></div>
+					<div class="stk-row" style="flex:1;justify-content:flex-end">
+						<span class="stk stk-p">AWS Cloud Practitioner</span><span class="stk stk-r">AWS AI Practitioner</span>
+						<span class="stk stk-n">Next.js</span><span class="stk stk-n">FastAPI</span><span class="stk stk-n">PyTorch</span><span class="stk stk-n">Tailwind</span><span class="stk stk-n">Docker</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 
-	<!-- Footer / Contact -->
-	<footer class="border-t border-white/[0.05] bg-surface/20 py-20 relative overflow-hidden">
-		<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
-		<div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-			<h2 class="font-heading text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Let's build something.</h2>
-			<p class="text-zinc-400 mb-10 max-w-md mx-auto text-sm md:text-base">
-				Currently open for research collaborations, software engineering internships, and deep technical discussions.
-			</p>
-            
-			<div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-				<a href="mailto:mehmet.ozel2701@gmail.com" class="px-8 py-3.5 rounded-lg bg-white text-background font-bold hover:bg-zinc-200 transition-all font-mono text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-					Get In Touch
-				</a>
-				<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="px-8 py-3.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all font-mono text-sm backdrop-blur-sm">
-					LinkedIn
-				</a>
+<!-- PROJECTS -->
+<section id="projects" class="projects">
+	<div class="proj-inner">
+		<div class="sec-tag purple">Shipped Products</div>
+		<div class="proj-grid">
+
+			<!-- Compiler (full width) -->
+			<div class="pc full sr" id="c1">
+				<div class="pc-img"><img src="./assets/comp1.PNG" alt="Compiler" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"><span class="flag">Flagship</span></div>
+				<div class="pc-body">
+					<span class="pcat pcat-r">LLM Optimizer</span>
+					<h3 class="pname">Compiler</h3>
+					<p class="pdesc">A prompt optimization engine built to slash LLM token costs without degrading output quality. Features a local heuristic engine, RAG context management, and a seamless Chrome extension.</p>
+					<div class="pquote rb">"Early benchmarks demonstrate up to a 40% reduction in token usage while preserving task performance."</div>
+					<div class="ptags"><span class="stk stk-n">Heuristics Engine</span><span class="stk stk-n">Chrome Extension</span><span class="stk stk-n">Local RAG</span></div>
+					<div class="plinks">
+						<a href="https://madara88645.github.io/landingpages/compiler/" target="_blank" class="lw">Live App <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a>
+						<a href="https://github.com/madara88645/Compiler" target="_blank" class="ld">Source <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg></a>
+					</div>
+				</div>
 			</div>
 
-			<p class="text-xs text-zinc-600 font-mono flex items-center justify-center gap-2">
-				© 2026 Mehmet Özel. <span class="w-1 h-1 bg-zinc-600 rounded-full"></span> Engineered with discipline.
-			</p>
-		</div>
-	</footer>
+			<!-- NeurIQ -->
+			<div class="pc sr">
+				<div class="pc-img"><img src="./assets/neuriq.PNG" alt="NeurIQ" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<div class="pc-body">
+					<span class="pcat pcat-p">Adaptive AI</span>
+					<h3 class="pname">NeurIQ</h3>
+					<p class="pdesc">An adaptive learning management system leveraging cognitive AI. It utilizes metacognitive tracking and dynamic content generation to tailor education to individual learning dynamics.</p>
+					<div class="pquote">"Aiming to improve knowledge retention efficiency by 30% via personalized spaced-repetition loops."</div>
+					<div class="ptags"><span class="stk stk-n">React</span><span class="stk stk-n">FastAPI</span><span class="stk stk-n">DeepSeek</span></div>
+					<div class="plinks"><a href="https://madara88645.github.io/landingpages/neurIQ/" target="_blank" class="lw">Case Study <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a></div>
+				</div>
+			</div>
 
+			<!-- PaperHunterAgent -->
+			<div class="pc sr">
+				<div class="pc-img"><img src="./assets/9f92b06d-6fa1-4082-99eb-09f930bca96b.png" alt="PaperHunterAgent" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
+				<div class="pc-body">
+					<div><span class="pcat pcat-p">Research Agent / Quantum ML</span><span class="pcat pcat-r">Research</span></div>
+					<h3 class="pname">PaperHunterAgent</h3>
+					<p class="pdesc">Automatically searches arXiv and Semantic Scholar for the latest quantum science papers, filters by relevance, and generates structured Markdown summaries with concept maps. Built for PhD students and researchers who need dense, structured digests of new papers without manual scraping — complete with TL;DR, key equations, and Mermaid graphs.</p>
+					<div class="pquote">"Reduces literature review time by providing relevance-scored summaries of 5–10 papers in under 5 minutes."</div>
+					<div class="ptags"><span class="stk stk-n">Python</span><span class="stk stk-n">arXiv API</span><span class="stk stk-n">Semantic Scholar</span><span class="stk stk-n">CLI Tool</span><span class="stk stk-n">Mermaid Maps</span></div>
+					<div class="plinks"><a href="https://github.com/madara88645/PaperHunterAgent" target="_blank" class="ld">Source Code <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg></a></div>
+				</div>
+			</div>
+
+			<!-- VibeGraph (full) -->
+			<div class="pc full sr">
+				<div class="pc-img"><img src="./assets/Bannervibe.png" alt="VibeGraph" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
+				<div class="pc-body">
+					<div><span class="pcat pcat-r">Code Learning / AST Analysis</span><span class="pcat pcat-p">Learning Tool</span></div>
+					<h3 class="pname">VibeGraph</h3>
+					<p class="pdesc">Transforms any Python codebase into an interactive call graph with node-level AI explanations, learning path suggestions, and real-time 'ghost runner' execution visualization. Designed for developers who learn by vibing with code but need structure — ask questions about any function, generate step-by-step learning orders, or watch AI traverse the execution path live.</p>
+					<div class="pquote">"Enables rapid comprehension of unfamiliar codebases by visualizing structure and providing on-demand AI explanations for every node."</div>
+					<div class="ptags"><span class="stk stk-n">Python AST</span><span class="stk stk-n">React Flow</span><span class="stk stk-n">FastAPI</span><span class="stk stk-n">Groq</span><span class="stk stk-n">NetworkX</span></div>
+					<div class="plinks"><a href="https://github.com/madara88645/VibeGraph" target="_blank" class="ld">Source Code <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg></a></div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact" class="footer">
+	<h2>Let's build something.</h2>
+	<p>Currently open for research collaborations, software engineering internships, and deep technical discussions.</p>
+	<div class="fbtns">
+		<a href="mailto:mehmet.ozel2701@gmail.com" class="btn-pri">Get In Touch</a>
+		<a href="https://www.linkedin.com/in/mehmet-ozel-695227300" target="_blank" class="btn-sec">LinkedIn</a>
+	</div>
+	<div class="fcopy">© 2026 Mehmet Özel · Engineered with discipline.</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
+document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+document.querySelectorAll('.pc').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')})});
+</script>
 </body>
 </html>
-
