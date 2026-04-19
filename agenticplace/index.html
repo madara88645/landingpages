@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AgenticPlace | Builder-First AI Workspace</title>
+	<meta name="description" content="AgenticPlace — Builder-first AI workspace for chat, agent authoring, orchestration jobs, saved workflows, and RAG-backed documents.">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+	<style>
+		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#94A3B8;--primary-l:#CBD5E1;--accent:#64748B;--slate:#475569;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace;--fm:'Fira Code',monospace}
+		*{margin:0;padding:0;box-sizing:border-box}
+		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+		::selection{background:rgba(148,163,184,0.25);color:#fff}
+
+		/* ── MESH GRADIENT BG ── */
+		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
+		.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:drift 25s ease-in-out infinite alternate}
+		.mb1{width:700px;height:600px;background:rgba(148,163,184,0.06);top:-15%;left:20%;animation-delay:0s}
+		.mb2{width:500px;height:500px;background:rgba(100,116,139,0.04);bottom:5%;right:-5%;animation-delay:-8s}
+		.mb3{width:600px;height:500px;background:rgba(71,85,105,0.04);top:40%;left:-15%;animation-delay:-15s}
+		@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,50px) scale(0.95)}100%{transform:translate(-10px,-40px) scale(1)}}
+
+		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
+			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
+
+		/* ── NAV ── */
+		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(148,163,184,0.15),rgba(100,116,139,0.1),transparent)}
+		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
+		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fm);font-weight:700;font-size:1.3rem;color:#fff}
+		.nlogo svg{width:28px;height:28px;color:var(--primary);filter:drop-shadow(0 0 10px rgba(148,163,184,0.4))}
+		.nlinks{display:flex;gap:2.5rem;list-style:none}
+		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
+		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
+		.nlinks a:hover{color:#fff}.nlinks a:hover::after{width:100%}
+		.ncta{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.4rem;font-family:var(--fm);font-size:0.7rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--primary-l),var(--primary));border:none;border-radius:8px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(148,163,184,0.15)}
+		.ncta:hover{box-shadow:0 0 30px rgba(148,163,184,0.25);transform:translateY(-1px)}
+
+		/* ── HERO ── */
+		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;perspective:1200px}
+		.hero-inner{max-width:1200px;margin:0 auto;width:100%;text-align:center}
+		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:rgba(148,163,184,0.06);border:1px solid rgba(148,163,184,0.12);font-family:var(--fm);font-size:0.65rem;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
+		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
+		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem}
+		.hero h1 .w{display:block;color:#fff}
+		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--primary-l),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+		.hero-sub{font-family:var(--fh);font-size:1.2rem;color:var(--primary);font-weight:500;margin-bottom:0.75rem;letter-spacing:0.02em}
+		.hero-desc{font-size:1rem;color:var(--text3);max-width:620px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
+		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--primary-l),var(--primary));border:none;border-radius:8px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(148,163,184,0.15)}
+		.btn-pri:hover{box-shadow:0 0 40px rgba(148,163,184,0.25);transform:translateY(-2px)}
+		.btn-pri svg{width:16px;height:16px}
+		.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all 0.3s}
+		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+		.btn-sec svg{width:16px;height:16px}
+
+		/* ── 3D BROWSER MOCKUP ── */
+		.browser-wrap{max-width:1000px;margin:0 auto;position:relative;transform:rotateX(6deg);transform-style:preserve-3d;transition:transform 0.6s ease;perspective:1200px}
+		.browser-wrap:hover{transform:rotateX(2deg)}
+		.browser-wrap::before{content:'';position:absolute;inset:-20px;background:rgba(148,163,184,0.06);filter:blur(60px);border-radius:50%;z-index:-1}
+		.browser-mock{background:var(--s2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(148,163,184,0.04)}
+		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
+		.browser-bar .d{width:10px;height:10px;border-radius:50%}
+		.d-r{background:#F43F5E}.d-y{background:#EAB308}.d-g{background:#22C55E}
+		.browser-body img{width:100%;display:block;opacity:0.9}
+
+		/* ── FEATURES BENTO ── */
+		.features{padding:6rem 3rem;background:var(--s1);position:relative}
+		.features-in{max-width:1200px;margin:0 auto}
+		.sec-tag{display:inline-flex;align-items:center;gap:0.75rem;font-family:var(--fm);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--primary)}
+		.sec-tag::before{content:'//';color:var(--primary)}
+		.sec-title{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
+		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:600px;margin-bottom:3rem;line-height:1.7}
+
+		.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:1.25rem}
+		.bc{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2rem;
+			transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+		.bc::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;
+			background:linear-gradient(135deg,rgba(148,163,184,0.12),transparent 50%);
+			-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
+		.bc:hover::before{opacity:1}
+		.bc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.3),0 0 30px rgba(148,163,184,0.05);border-color:rgba(148,163,184,0.12)}
+		.bc.c2x2{grid-column:span 2;grid-row:span 2}
+		.bc.c2x1{grid-column:span 2}
+		.bc.c4x1{grid-column:span 4}
+
+		.bc .feat-img{width:100%;height:200px;border-radius:14px;overflow:hidden;margin-bottom:1.25rem;position:relative;border:1px solid var(--border)}
+		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.8;transition:all 0.5s}
+		.bc .feat-img.product-shot{height:260px;background:#050508}
+		.bc .feat-img.product-shot img{object-position:center top;opacity:0.92}
+		.bc .feat-img.product-shot::after{background:linear-gradient(to top,rgba(22,22,29,0.42),transparent 65%)}
+		.bc:hover .feat-img img{opacity:1;transform:scale(1.03)}
+		.bc .feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
+
+		.bc .chip{display:inline-flex;align-items:center;gap:0.35rem;padding:0.2rem 0.5rem;border-radius:4px;font-family:var(--fm);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+		.chip-s{background:rgba(148,163,184,0.08);color:#94A3B8;border:1px solid rgba(148,163,184,0.15)}
+		.chip-g{background:rgba(34,197,94,0.08);color:#4ADE80;border:1px solid rgba(34,197,94,0.15)}
+		.bc h4{font-family:var(--fh);font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:0.35rem}
+		.bc p{font-size:0.85rem;color:var(--text3);line-height:1.65}
+		.bc .icon{width:36px;height:36px;color:var(--primary);opacity:0.4;transition:opacity 0.3s;margin-bottom:auto}
+		.bc:hover .icon{opacity:0.8}
+
+		/* Lifecycle flow */
+		.lifecycle{display:flex;align-items:center;gap:0.5rem;margin:1rem 0;flex-wrap:wrap}
+		.lf-step{padding:0.3rem 0.7rem;border-radius:6px;font-family:var(--fm);font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+		.lf-step.s1{background:rgba(148,163,184,0.08);color:var(--primary);border:1px solid rgba(148,163,184,0.2)}
+		.lf-step.s2{background:rgba(59,130,246,0.08);color:#60A5FA;border:1px solid rgba(59,130,246,0.2)}
+		.lf-step.s3{background:rgba(34,197,94,0.08);color:#4ADE80;border:1px solid rgba(34,197,94,0.2)}
+		.lf-step.s4{background:rgba(168,85,247,0.08);color:#C084FC;border:1px solid rgba(168,85,247,0.2)}
+		.lf-arrow{color:var(--text3);font-size:0.7rem}
+
+		/* Full-width feature with side image */
+		.bc.c4x1{padding:0;display:flex;align-items:stretch;min-height:220px}
+		.bc.c4x1 .feat-text{padding:2rem;flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
+		.bc.c4x1 .feat-side{position:absolute;right:0;top:0;width:60%;height:100%;overflow:hidden}
+		.bc.c4x1 .feat-side img{width:100%;height:100%;object-fit:cover;object-position:left top;opacity:0.4;transition:opacity 0.5s}
+		.bc.c4x1:hover .feat-side img{opacity:0.75}
+		.bc.c4x1 .feat-side::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--s1),transparent);z-index:1}
+
+		/* ── ROUTE MAP ── */
+		.route-map{padding:5rem 3rem;background:var(--bg)}
+		.route-map-in{max-width:1200px;margin:0 auto}
+		.routes{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:2rem}
+		.route-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:all 0.3s}
+		.route-card:hover{border-color:rgba(148,163,184,0.12);transform:translateY(-2px)}
+		.route-card .rpath{font-family:var(--fm);font-size:0.8rem;color:var(--primary);margin-bottom:0.5rem}
+		.route-card .rdesc{font-size:0.82rem;color:var(--text3);line-height:1.6}
+
+		/* ── CTA SECTION ── */
+		.cta-section{padding:6rem 3rem;text-align:center;background:var(--s1);position:relative}
+		.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:300px;background:radial-gradient(circle,rgba(148,163,184,0.04),transparent);filter:blur(60px);pointer-events:none}
+		.cta-section .icon-big{width:48px;height:48px;color:var(--primary);opacity:0.6;margin:0 auto 1.5rem}
+		.cta-section h3{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:-0.02em}
+		.cta-section>p{color:var(--text3);max-width:550px;margin:0 auto 2rem;font-size:0.95rem;line-height:1.7}
+		.cta-links{display:flex;gap:1.5rem;justify-content:center;align-items:center;flex-wrap:wrap}
+		.cta-links a{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--fm);font-size:0.85rem;color:var(--text3);text-decoration:none;transition:color 0.3s}
+		.cta-links a:hover{color:var(--primary)}
+		.cta-links a svg{width:18px;height:18px}
+
+		/* ── FOOTER ── */
+		.footer{padding:2.5rem 3rem;border-top:1px solid var(--border);background:var(--bg)}
+		.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+		.footer-logo{display:flex;align-items:center;gap:0.5rem;font-family:var(--fm);font-weight:700;color:#fff;font-size:0.9rem}
+		.footer-logo svg{width:18px;height:18px;color:var(--primary)}
+		.footer-copy{font-family:var(--fl);font-size:0.6rem;color:#333}
+
+		.sr{opacity:0;transform:translateY(30px);transition:all 0.7s ease}.sr.v{opacity:1;transform:translateY(0)}
+
+		@media(max-width:1024px){
+			.bento{grid-template-columns:1fr}.bc.c2x2,.bc.c2x1,.bc.c4x1{grid-column:span 1;grid-row:span 1}
+			.bc.c4x1{flex-direction:column}.bc.c4x1 .feat-side{position:relative;width:100%;height:200px}
+			.bc.c4x1 .feat-side::before{background:linear-gradient(to bottom,var(--s1),transparent)}
+			.nlinks{display:none}
+			.routes{grid-template-columns:1fr}
+		}
+	</style>
+</head>
+<body>
+
+<div class="mesh-bg"><div class="mesh-blob mb1"></div><div class="mesh-blob mb2"></div><div class="mesh-blob mb3"></div></div>
+<div class="grid-overlay"></div>
+
+<!-- NAV -->
+<nav class="nav"><div class="nav-in">
+	<a href="#" class="nlogo">
+		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+		AgenticPlace
+	</a>
+	<ul class="nlinks"><li><a href="#features">Features</a></li><li><a href="#routes">Routes</a></li><li><a href="#about">About</a></li></ul>
+	<a href="../" class="ncta">← Portfolio</a>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero">
+	<div class="hero-inner">
+		<div class="hero-chip"><span class="dot"></span>Builder-First AI Workspace</div>
+		<h1><span class="w">Build. Orchestrate.</span><span class="g">Deploy Agents.</span></h1>
+		<p class="hero-sub">One unified workspace for the entire agent lifecycle.</p>
+		<p class="hero-desc">Chat with agents, author them in a full ADK workbench, run orchestration jobs, build saved workflows, and manage RAG-backed documents — all from a single Electron-powered desktop app.</p>
+		<div class="hero-btns">
+			<a href="#features" class="btn-pri">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+				Explore Features
+			</a>
+			<a href="../" class="btn-sec">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+				Back to Portfolio
+			</a>
+		</div>
+		<div class="browser-wrap sr">
+			<div class="browser-mock">
+				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
+				<div class="browser-body"><img src="../assets/agenticplace_banner.png" alt="AgenticPlace Workspace" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop'"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features">
+	<div class="features-in">
+		<div class="sec-tag">Workspace Areas</div>
+		<h2 class="sec-title">Everything You Need to Ship Agents.</h2>
+		<p class="sec-desc">A unified surface that replaces a dozen disconnected tools — from authoring to orchestration to retrieval, all driven by a clean route-based architecture.</p>
+
+		<div class="bento">
+			<!-- Chat & Orchestration (2x2) -->
+			<div class="bc c2x2 sr">
+				<div class="feat-img product-shot"><img src="../assets/agenticplace_chat_workspace.png" alt="AgenticPlace chat workspace with agents, runtime status, and execution trace"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+				<div class="chip chip-s"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary);margin-right:2px"></span> Core</div>
+				<h4>Chat & Multi-Agent Orchestration</h4>
+				<p>Interactive request/response execution supporting simple chat, agentic tool use, coordinator orchestration, and RAG-augmented conversations. WebSocket and REST share the same request shape.</p>
+				<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.4rem">
+					<span style="padding:0.2rem 0.5rem;font-family:var(--fm);font-size:0.6rem;border-radius:4px;background:rgba(148,163,184,0.08);color:var(--primary);border:1px solid rgba(148,163,184,0.15)">simple_chat</span>
+					<span style="padding:0.2rem 0.5rem;font-family:var(--fm);font-size:0.6rem;border-radius:4px;background:rgba(148,163,184,0.08);color:var(--primary);border:1px solid rgba(148,163,184,0.15)">agentic</span>
+					<span style="padding:0.2rem 0.5rem;font-family:var(--fm);font-size:0.6rem;border-radius:4px;background:rgba(148,163,184,0.08);color:var(--primary);border:1px solid rgba(148,163,184,0.15)">coordinator</span>
+					<span style="padding:0.2rem 0.5rem;font-family:var(--fm);font-size:0.6rem;border-radius:4px;background:rgba(148,163,184,0.08);color:var(--primary);border:1px solid rgba(148,163,184,0.15)">rag</span>
+				</div>
+			</div>
+
+			<!-- ADK Workbench (2x1) -->
+			<div class="bc c2x1 sr">
+				<div class="chip chip-g"><svg style="width:10px;height:10px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> ADK</div>
+				<h4>Agent Development Kit</h4>
+				<p>Full authoring workbench for agent validation, testing, deployment, and execution history inspection.</p>
+				<div class="lifecycle">
+					<span class="lf-step s1">Draft</span><span class="lf-arrow">→</span>
+					<span class="lf-step s2">Valid</span><span class="lf-arrow">→</span>
+					<span class="lf-step s3">Deployed</span><span class="lf-arrow">→</span>
+					<span class="lf-step s4">Tested</span>
+				</div>
+			</div>
+
+			<!-- RAG Documents -->
+			<div class="bc sr">
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+				<h4>RAG Documents</h4>
+				<p>ChromaDB-backed local pipeline for document upload, retrieval, and source-aware responses.</p>
+			</div>
+
+			<!-- Workflows -->
+			<div class="bc sr">
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--primary-l)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+				<h4>Saved Workflows</h4>
+				<p>Reusable ordered graphs of agent steps with step preview and agent mapping.</p>
+			</div>
+
+			<!-- Electron Desktop (full-width) -->
+			<div class="bc c4x1 sr">
+				<div class="feat-text">
+					<div class="chip chip-s"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#94A3B8;margin-right:2px"></span> Desktop</div>
+					<h4>Electron Desktop Shell</h4>
+					<p>Full web-parity desktop application. Same routes, same backend contract. The Electron main process manages the backend and delivers the resolved URL via secure IPC bridge — making the app truly portable and self-contained.</p>
+				</div>
+				<div class="feat-side"><img src="../assets/agenticplace_banner.png" alt="Electron Desktop" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- ROUTE MAP -->
+<section id="routes" class="route-map">
+	<div class="route-map-in">
+		<div class="sec-tag">Architecture</div>
+		<h2 class="sec-title">Route-Driven Workspace.</h2>
+		<p class="sec-desc">Every surface is a clean route. No hidden modals, no scattered state — just a simple URL you can bookmark, share, and test.</p>
+		<div class="routes">
+			<div class="route-card sr"><div class="rpath">/</div><div class="rdesc">Canonical chat shell — general, agent-scoped, agentic, coordinator, and RAG conversations.</div></div>
+			<div class="route-card sr"><div class="rpath">/agents</div><div class="rdesc">Agent inventory — browse, search, and manage all saved agents and their deployment state.</div></div>
+			<div class="route-card sr"><div class="rpath">/adk</div><div class="rdesc">ADK workbench — draft, validate, test, deploy, and inspect agent execution history.</div></div>
+			<div class="route-card sr"><div class="rpath">/workflow</div><div class="rdesc">Workflow list — saved agent pipelines with step preview and agent mapping.</div></div>
+			<div class="route-card sr"><div class="rpath">/jobs</div><div class="rdesc">Job list — ad hoc planner/executor/aggregator orchestration runs with live updates.</div></div>
+			<div class="route-card sr"><div class="rpath">/documents</div><div class="rdesc">RAG document inventory — upload, delete, and manage retrieval sources for ChromaDB.</div></div>
+		</div>
+	</div>
+</section>
+
+<!-- CTA -->
+<section id="about" class="cta-section">
+	<svg class="icon-big" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21" stroke-width="1.5"></line><line x1="12" y1="17" x2="12" y2="21" stroke-width="1.5"></line></svg>
+	<h3>Built for Builders.</h3>
+	<p>AgenticPlace started as a personal need — a workspace where I could author agents, test them, orchestrate multi-agent pipelines, and manage RAG documents without context-switching between a dozen tools. It's local-first, open to extension, and designed for the way I actually build AI systems.</p>
+	<div class="cta-links">
+		<a href="../">
+			<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+			Back to Portfolio
+		</a>
+	</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer"><div class="footer-in">
+	<div class="footer-logo">
+		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+		AgenticPlace
+	</div>
+	<div class="footer-copy">© 2026 Mehmet Özel. Private repository.</div>
+</div></footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
+document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
