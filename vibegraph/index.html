@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>VibeGraph | Interactive Python Call Graphs & AI Explanations</title>
+	<meta name="description" content="VibeGraph — Turn any Python repo into an interactive call graph with per-node AI explanations, learning paths, and execution visualization.">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+	<style>
+		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#A78BFA;--primary-d:#7C3AED;--accent:#C4B5FD;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace;--fm:'Fira Code',monospace}
+		*{margin:0;padding:0;box-sizing:border-box}
+		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+		::selection{background:rgba(167,139,250,0.25);color:#fff}
+
+		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
+		.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:drift 25s ease-in-out infinite alternate}
+		.mb1{width:700px;height:600px;background:rgba(124,58,237,0.07);top:-15%;left:20%;animation-delay:0s}
+		.mb2{width:500px;height:500px;background:rgba(167,139,250,0.05);bottom:5%;right:-5%;animation-delay:-8s}
+		.mb3{width:600px;height:500px;background:rgba(196,181,253,0.04);top:40%;left:-15%;animation-delay:-15s}
+		@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,50px) scale(0.95)}100%{transform:translate(-10px,-40px) scale(1)}}
+
+		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
+			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
+
+		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.2),rgba(124,58,237,0.12),transparent)}
+		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
+		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fm);font-weight:700;font-size:1.3rem;color:#fff}
+		.nlogo svg{width:28px;height:28px;color:var(--primary);filter:drop-shadow(0 0 10px rgba(167,139,250,0.45))}
+		.nlinks{display:flex;gap:2.5rem;list-style:none;align-items:center}
+		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
+		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
+		.nlinks a:hover{color:#fff}.nlinks a:hover::after{width:100%}
+		.ncta{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.4rem;font-family:var(--fm);font-size:0.7rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--accent),var(--primary-d));border:none;border-radius:8px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(124,58,237,0.25)}
+		.ncta:hover{box-shadow:0 0 32px rgba(167,139,250,0.35);transform:translateY(-1px)}
+		.ncta svg{width:16px;height:16px}
+
+		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;perspective:1200px}
+		.hero-inner{max-width:1200px;margin:0 auto;width:100%;text-align:center}
+		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:rgba(124,58,237,0.08);border:1px solid rgba(167,139,250,0.15);font-family:var(--fm);font-size:0.65rem;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
+		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
+		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem}
+		.hero h1 .w{display:block;color:#fff}
+		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--accent),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+		.hero-sub{font-family:var(--fh);font-size:1.15rem;color:var(--accent);font-weight:500;margin-bottom:0.75rem}
+		.hero-desc{font-size:1rem;color:var(--text3);max-width:640px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
+		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:600;color:var(--bg);background:linear-gradient(135deg,var(--accent),var(--primary-d));border:none;border-radius:8px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(124,58,237,0.25)}
+		.btn-pri:hover{box-shadow:0 0 40px rgba(167,139,250,0.35);transform:translateY(-2px)}
+		.btn-pri svg{width:16px;height:16px}
+		.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all 0.3s}
+		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+		.btn-sec svg{width:16px;height:16px}
+
+		.browser-wrap{max-width:1000px;margin:0 auto;position:relative;transform:rotateX(6deg);transform-style:preserve-3d;transition:transform 0.6s ease;perspective:1200px}
+		.browser-wrap:hover{transform:rotateX(2deg)}
+		.browser-wrap::before{content:'';position:absolute;inset:-20px;background:rgba(124,58,237,0.08);filter:blur(60px);border-radius:50%;z-index:-1}
+		.browser-mock{background:var(--s2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(124,58,237,0.06)}
+		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
+		.browser-bar .d{width:10px;height:10px;border-radius:50%}
+		.d-r{background:#F43F5E}.d-y{background:#EAB308}.d-g{background:#22C55E}
+		.browser-body img{width:100%;display:block;opacity:0.92}
+
+		.features{padding:6rem 3rem;background:var(--s1);position:relative}
+		.features-in{max-width:1200px;margin:0 auto}
+		.sec-tag{display:inline-flex;align-items:center;gap:0.75rem;font-family:var(--fm);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--primary)}
+		.sec-tag::before{content:'//';color:var(--primary)}
+		.sec-title{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
+		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:600px;margin-bottom:3rem;line-height:1.7}
+
+		.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+		.card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2rem;transition:all 0.45s ease;position:relative;overflow:hidden}
+		.card::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,rgba(167,139,250,0.15),transparent 55%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.35s}
+		.card:hover::before{opacity:1}
+		.card:hover{transform:translateY(-4px);border-color:rgba(167,139,250,0.15);box-shadow:0 16px 50px rgba(0,0,0,0.3),0 0 28px rgba(124,58,237,0.08)}
+		.card .chip{display:inline-block;padding:0.2rem 0.5rem;border-radius:4px;font-family:var(--fm);font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.65rem;background:rgba(124,58,237,0.1);color:var(--accent);border:1px solid rgba(167,139,250,0.2)}
+		.card h4{font-family:var(--fh);font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:0.4rem}
+		.card p{font-size:0.86rem;color:var(--text3);line-height:1.65}
+
+		.cta-section{padding:6rem 3rem;text-align:center;background:var(--bg);position:relative}
+		.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:420px;height:320px;background:radial-gradient(circle,rgba(124,58,237,0.06),transparent);filter:blur(60px);pointer-events:none}
+		.cta-section h3{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:#fff;margin-bottom:1rem;position:relative;z-index:1}
+		.cta-section>p{color:var(--text3);max-width:520px;margin:0 auto 2rem;font-size:0.95rem;line-height:1.7;position:relative;z-index:1}
+		.cta-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+		.cta-links a{display:inline-flex;align-items:center;gap:0.45rem;font-family:var(--fm);font-size:0.85rem;color:var(--text3);text-decoration:none;transition:color 0.3s}
+		.cta-links a:hover{color:var(--primary)}
+
+		.footer{padding:2.5rem 3rem;border-top:1px solid var(--border);background:var(--s1)}
+		.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+		.footer-logo{display:flex;align-items:center;gap:0.5rem;font-family:var(--fm);font-weight:700;color:#fff;font-size:0.9rem}
+		.footer-logo svg{width:18px;height:18px;color:var(--primary)}
+		.footer-copy{font-family:var(--fl);font-size:0.6rem;color:#333}
+
+		.sr{opacity:0;transform:translateY(28px);transition:all 0.65s ease}.sr.v{opacity:1;transform:translateY(0)}
+
+		@media(max-width:900px){
+			.grid3{grid-template-columns:1fr}
+			.nlinks{display:none}
+		}
+	</style>
+</head>
+<body>
+
+<div class="mesh-bg"><div class="mesh-blob mb1"></div><div class="mesh-blob mb2"></div><div class="mesh-blob mb3"></div></div>
+<div class="grid-overlay"></div>
+
+<nav class="nav"><div class="nav-in">
+	<a href="../index.html#projects" class="nlogo">
+		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+		VibeGraph
+	</a>
+	<ul class="nlinks">
+		<li><a href="#features">Features</a></li>
+		<li><a href="../index.html#projects">Portfolio</a></li>
+		<li><a href="https://github.com/madara88645/VibeGraph" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+	</ul>
+	<a href="https://vibegraph.vercel.app/" target="_blank" rel="noopener noreferrer" class="ncta">
+		<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+		Open App
+	</a>
+</div></nav>
+
+<section class="hero">
+	<div class="hero-inner">
+		<div class="hero-chip"><span class="dot"></span>Code learning · AST · Graph</div>
+		<h1><span class="w">Structure you can</span><span class="g">see and explore.</span></h1>
+		<p class="hero-sub">Interactive call graphs for real Python codebases.</p>
+		<p class="hero-desc">VibeGraph parses your project into a navigable graph: every node can surface AI explanations, suggested learning paths, and a lightweight view of execution flow—so unfamiliar repos become maps instead of mazes.</p>
+		<div class="hero-btns">
+			<a href="https://vibegraph.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-pri">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+				Live app
+			</a>
+			<a href="https://github.com/madara88645/VibeGraph" target="_blank" rel="noopener noreferrer" class="btn-sec">
+				<svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg>
+				Source
+			</a>
+		</div>
+		<div class="browser-wrap sr">
+			<div class="browser-mock">
+				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
+				<div class="browser-body"><img src="../assets/Bannervibe.png" alt="VibeGraph interface" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop'"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="features" class="features">
+	<div class="features-in">
+		<div class="sec-tag">Product</div>
+		<h2 class="sec-title">Built for comprehension.</h2>
+		<p class="sec-desc">Python AST and NetworkX lay the graph foundation; React Flow handles interaction; FastAPI and Groq power on-demand explanations—without losing the “vibe coding” feel.</p>
+		<div class="grid3">
+			<div class="card sr">
+				<span class="chip">Graph</span>
+				<h4>Call graph from AST</h4>
+				<p>Static analysis turns modules and functions into nodes and edges you can pan, zoom, and follow—ideal for onboarding and refactors.</p>
+			</div>
+			<div class="card sr">
+				<span class="chip">AI</span>
+				<h4>Node-level explanations</h4>
+				<p>Select any node for contextual summaries and guidance, so dense logic files stay approachable.</p>
+			</div>
+			<div class="card sr">
+				<span class="chip">Flow</span>
+				<h4>Paths & visualization</h4>
+				<p>Learning-path hints and execution-oriented views help you reason about control flow without running everything blindly.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="cta-section">
+	<h3>Try it on a repo you do not know yet.</h3>
+	<p>Open the hosted app, load a Python tree, and walk the graph—then dive into the open-source implementation if you want to extend parsers or UI.</p>
+	<div class="cta-links">
+		<a href="https://vibegraph.vercel.app/" target="_blank" rel="noopener noreferrer">
+			<svg fill="none" stroke="currentColor" width="18" height="18" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+			vibegraph.vercel.app
+		</a>
+		<a href="../index.html#projects">
+			<svg fill="none" stroke="currentColor" width="18" height="18" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+			Back to portfolio
+		</a>
+	</div>
+</section>
+
+<footer class="footer"><div class="footer-in">
+	<div class="footer-logo">
+		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+		VibeGraph
+	</div>
+	<div class="footer-copy">© 2026 Mehmet Özel</div>
+</div></footer>
+
+<script>
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
+document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
