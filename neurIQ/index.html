@@ -134,10 +134,11 @@
 		.bc .feat-img::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
 		.bc .feat-img.tall::after{display:none}
 		.browser-body img{cursor:zoom-in}
-		.lightbox{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:3vh 3vw;background:rgba(6,6,10,0.92);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+		.lightbox{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:3vh 3vw;background:rgba(6,6,10,0.95);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s ease;overflow:hidden}
 		.lightbox.open{opacity:1;pointer-events:auto}
-		.lightbox img{max-width:95vw;max-height:92vh;border-radius:12px;border:1px solid var(--border2);box-shadow:0 30px 90px rgba(0,0,0,0.6);transform:scale(.95);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+		.lightbox img{max-width:95vw;max-height:92vh;border-radius:12px;border:1px solid var(--border2);box-shadow:0 30px 90px rgba(0,0,0,0.6);transform:scale(.95);transform-origin:center center;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 		.lightbox.open img{transform:scale(1)}
+		.lightbox img.zoomed{transform:scale(2.2);cursor:zoom-out;transition:transform 0.1s ease-out, transform-origin 0.15s ease-out}
 		.lightbox-hint{position:fixed;top:18px;right:24px;font-family:var(--fl);font-size:.7rem;color:var(--text2);letter-spacing:.05em}
 		.bc .icon{width:34px;height:34px;color:var(--accent);opacity:0.5;transition:opacity 0.3s;margin-bottom:0.9rem}
 		.bc:hover .icon{opacity:0.9}
@@ -611,6 +612,8 @@
 	</div>
 </footer>
 
+<div class="lightbox" id="lightbox"><span class="lightbox-hint">Click image to zoom · Move mouse to pan · Click background to close</span><img id="lightbox-img" src="" alt="Expanded screenshot"></div>
+
 <script>
 const FORM_ENDPOINT="https://formsubmit.co/ajax/mehmet.ozel2701@gmail.com";
 const DEFAULT_LANGUAGE="en";
@@ -627,13 +630,46 @@ document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
 (function(){
   var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightbox-img');
   document.querySelectorAll('.feat-img img, .browser-body img').forEach(function(img){
-    img.addEventListener('click',function(){lbImg.src=img.currentSrc||img.src;lb.classList.add('open');});
+    img.addEventListener('click',function(e){
+      e.stopPropagation();
+      lbImg.src=img.currentSrc||img.src;
+      lb.classList.add('open');
+      lbImg.classList.remove('zoomed');
+      lbImg.style.transformOrigin='center center';
+    });
   });
-  function closeLb(){lb.classList.remove('open');}
+  lbImg.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(lbImg.classList.contains('zoomed')){
+      lbImg.classList.remove('zoomed');
+      lbImg.style.transformOrigin='center center';
+    }else{
+      const rect=lbImg.getBoundingClientRect();
+      const x=e.clientX-rect.left;
+      const y=e.clientY-rect.top;
+      const xPercent=(x/rect.width)*100;
+      const yPercent=(y/rect.height)*100;
+      lbImg.style.transformOrigin=`${xPercent}% ${yPercent}%`;
+      lbImg.classList.add('zoomed');
+    }
+  });
+  lbImg.addEventListener('mousemove',function(e){
+    if(!lbImg.classList.contains('zoomed'))return;
+    const rect=lbImg.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const xPercent=(x/rect.width)*100;
+    const yPercent=(y/rect.height)*100;
+    lbImg.style.transformOrigin=`${xPercent}% ${yPercent}%`;
+  });
+  function closeLb(){
+    lb.classList.remove('open');
+    lbImg.classList.remove('zoomed');
+    lbImg.style.transformOrigin='center center';
+  }
   lb.addEventListener('click',closeLb);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
 })();
 </script>
-<div class="lightbox" id="lightbox"><span class="lightbox-hint">Click anywhere · Esc to close</span><img id="lightbox-img" src="" alt="Expanded screenshot"></div>
 </body>
 </html>
