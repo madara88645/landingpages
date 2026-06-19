@@ -4,9 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NeurIQ | AI that adapts to how YOU learn</title>
-	<meta name="description" content="NeurIQ is a cognitive-aware, project-based learning platform for STEM, CS & AI students. It profiles how you learn, then generates personalized courses, spaced-repetition reviews, skill trees and real-world projects around your brain.">
+	<meta name="description" content="NeurIQ is a cognitive-aware learning platform for STEM, CS & AI students. It learns how you study, then generates personalized courses, spaced-repetition reviews, adaptive practice and skill trees around how you learn.">
 	<meta property="og:title" content="NeurIQ — AI that adapts to how YOU learn">
-	<meta property="og:description" content="A cognitive-aware learning studio that turns any topic into a personalized plan, adaptive practice, and a portfolio-ready project.">
+	<meta property="og:description" content="A cognitive-aware learning studio that turns any topic into a personalized plan, adaptive practice, and a visual map of what you've mastered.">
 	<meta property="og:type" content="website">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
@@ -126,9 +126,19 @@
 		.bc.c2x2{grid-column:span 2;grid-row:span 2}
 		.bc.c2x1{grid-column:span 2}
 		.bc .feat-img{width:100%;flex:1;min-height:180px;border-radius:14px;overflow:hidden;margin-bottom:1.2rem;position:relative;border:1px solid var(--border)}
-		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.82;transition:all 0.5s}
+		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.82;transition:all 0.5s;cursor:zoom-in}
+		.bc .feat-img.tall{min-height:230px;background:var(--s2)}
+		.bc .feat-img.tall img{object-fit:contain;object-position:center;padding:6px}
 		.bc:hover .feat-img img{opacity:1;transform:scale(1.03)}
-		.bc .feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
+		.bc .feat-img.tall:hover img{transform:none}
+		.bc .feat-img::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
+		.bc .feat-img.tall::after{display:none}
+		.browser-body img{cursor:zoom-in}
+		.lightbox{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:3vh 3vw;background:rgba(6,6,10,0.92);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+		.lightbox.open{opacity:1;pointer-events:auto}
+		.lightbox img{max-width:95vw;max-height:92vh;border-radius:12px;border:1px solid var(--border2);box-shadow:0 30px 90px rgba(0,0,0,0.6);transform:scale(.95);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+		.lightbox.open img{transform:scale(1)}
+		.lightbox-hint{position:fixed;top:18px;right:24px;font-family:var(--fl);font-size:.7rem;color:var(--text2);letter-spacing:.05em}
 		.bc .icon{width:34px;height:34px;color:var(--accent);opacity:0.5;transition:opacity 0.3s;margin-bottom:0.9rem}
 		.bc:hover .icon{opacity:0.9}
 		.bc h4{font-family:var(--fh);font-size:1.12rem;font-weight:600;color:#fff;margin-bottom:0.3rem}
@@ -280,8 +290,8 @@
 		<div class="hero-chip"><span class="dot"></span>Private Beta · Built for STEM, CS &amp; AI students</div>
 		<h1><span class="w">Learn the way</span><span class="g">your brain works.</span></h1>
 		<p class="hero-sub">AI that adapts to how YOU learn.</p>
-		<p class="hero-desc">NeurIQ builds a living cognitive profile of how you learn — your attention, pace and forgetting curve — then generates personalized courses, spaced-repetition reviews, skill trees and real-world projects around it.</p>
-		<p class="hero-oneliner">A cognitive-aware, project-based learning studio that turns any topic into a personalized plan, adaptive practice, and a portfolio-ready project.</p>
+		<p class="hero-desc">NeurIQ builds a living cognitive profile of how you learn — your attention, pace and forgetting curve — then generates personalized courses, spaced-repetition reviews, adaptive practice and skill trees around it.</p>
+		<p class="hero-oneliner">A cognitive-aware learning studio that turns any topic into a personalized plan, adaptive practice, and a visual map of what you've mastered.</p>
 		<div class="hero-btns">
 			<a href="#waitlist" class="btn-pri">Join the Private Beta →</a>
 			<a href="#how-it-works" class="btn-sec">See how it works</a>
@@ -310,7 +320,7 @@
 		<div class="pgrid">
 			<div class="pcard sr"><span class="pemoji">📉</span><h4>You forget faster than you learn</h4><p>Without spaced repetition timed to <em>your</em> forgetting curve, most new material is gone within days.</p></div>
 			<div class="pcard sr"><span class="pemoji">🎯</span><h4>One-size-fits-all content</h4><p>Courses ignore your pace, attention span and prior knowledge — so you're either bored or lost, rarely in flow.</p></div>
-			<div class="pcard sr"><span class="pemoji">🧩</span><h4>Learning ≠ doing</h4><p>Watching lectures doesn't build a portfolio. Without real projects, knowledge never becomes a demonstrable skill.</p></div>
+			<div class="pcard sr"><span class="pemoji">🧩</span><h4>Learning ≠ doing</h4><p>Watching lectures isn't the same as doing the work. Without active practice and recall, knowledge fades instead of becoming usable skill.</p></div>
 		</div>
 	</div>
 </section>
@@ -320,7 +330,7 @@
 	<div class="pillars-in">
 		<div class="sec-tag center" style="justify-content:center">Why NeurIQ</div>
 		<h2 class="sec-title">Three engines you won't find stacked together anywhere else.</h2>
-		<p class="sec-desc">Personalization and analytics are table stakes now. NeurIQ's real edge is the combination of cognitive profiling, project-based reality and visual mastery — built into one continuous loop.</p>
+		<p class="sec-desc">Personalization and analytics are table stakes now. NeurIQ's real edge is the combination of cognitive profiling, adaptive practice and visual mastery — built into one continuous loop.</p>
 		<div class="pgrid3">
 			<div class="pillar sr">
 				<div class="pnum">01</div>
@@ -332,7 +342,7 @@
 				<ul>
 					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Attention, pace, review-need &amp; difficulty preference</li>
 					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Powered by a dedicated Python analytics service</li>
-					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Drives every recommendation in the app</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Shapes the recommendations you see</li>
 				</ul>
 			</div>
 			<div class="pillar sr">
@@ -340,12 +350,12 @@
 				<div class="pvis">
 					<svg width="180" height="76" viewBox="0 0 180 76" fill="none"><rect x="16" y="14" width="44" height="20" rx="5" stroke="#7C3AED" stroke-width="2"/><rect x="68" y="14" width="44" height="20" rx="5" stroke="#22D3EE" stroke-width="2"/><rect x="120" y="14" width="44" height="20" rx="5" stroke="#F43F5E" stroke-width="2"/><rect x="42" y="48" width="44" height="20" rx="5" stroke="#34D399" stroke-width="2"/><rect x="94" y="48" width="44" height="20" rx="5" stroke="#A78BFA" stroke-width="2"/><line x1="38" y1="34" x2="64" y2="48" stroke="#2a2a3a"/><line x1="90" y1="34" x2="116" y2="48" stroke="#2a2a3a"/></svg>
 				</div>
-				<h4>Project-Based Reality Simulator</h4>
-				<p>Turn a topic into a simulated real-world project — a brief, a workspace and rubric-based feedback — so learning ends in something you can ship.</p>
+				<h4>Adaptive Practice &amp; Recall</h4>
+				<p>Quizzes, flashcards, spaced repetition and a Feynman board work as one loop — and when you're confident but wrong, hypercorrection turns the mistake into a stronger memory.</p>
 				<ul>
-					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>From "I studied it" to "I built it"</li>
-					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Portfolio &amp; CV-ready outcomes</li>
-					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Multi-agent tutor + reviewer concept</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Spaced repetition timed to your forgetting curve</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Hypercorrection on confident mistakes</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Feynman board surfaces what you misunderstood</li>
 				</ul>
 			</div>
 			<div class="pillar sr">
@@ -403,13 +413,13 @@
 		<h2 class="sec-title center">Nine AI-powered tools in one focused workspace.</h2>
 		<p class="sec-desc center">Everything a serious learner needs — generation, practice, reflection and analytics — without tab-hopping across five different apps.</p>
 		<div class="bento">
-			<div class="bc c2x2 sr">
-				<div class="feat-img"><img src="../assets/neuriq-analytics-charts.png" alt="Cognitive analytics &amp; metacognition" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+			<div class="bc c2x1 sr">
+				<div class="feat-img tall"><img src="../assets/neuriq-analytics-charts.png" alt="Cognitive analytics &amp; metacognition" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
 				<h4>Cognitive Analytics &amp; Profile</h4>
 				<p>Retention heatmaps, forgetting-curve projections and a metacognition view that show not just <em>what</em> you know, but how you learn — and exactly what to review next.</p>
 				<span class="tag">Cognitive Engine</span>
 			</div>
-			<div class="bc c2x1 sr">
+			<div class="bc sr">
 				<div class="feat-img"><img src="../assets/neuriq-course-generate.png" alt="AI Course Generator" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
 				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
 				<h4>AI Course Generator</h4>
@@ -440,6 +450,7 @@
 				<p>Explain a concept in your own words; the AI surfaces your misunderstandings.</p>
 			</div>
 			<div class="bc sr">
+				<div class="feat-img"><img src="../assets/neuriq-mock-interview.png" alt="Mock Interview" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
 				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
 				<h4>Mock Interview</h4>
 				<p>Practice technical interviews with AI questions, timing and performance history.</p>
@@ -493,7 +504,7 @@
 			<div class="phase active sr"><div class="ptag">Phase 1 · Now</div><h4>Private Beta</h4><ul><li>Onboarding + AI course generation</li><li>SRS &amp; core cognitive profiling</li><li>Tight feedback loop with early users</li></ul><span class="live">● Live</span></div>
 			<div class="phase sr"><div class="ptag">Phase 2</div><h4>Iteration Sprint</h4><ul><li>Profiling engine v1 (core signals)</li><li>SRS dashboard &amp; metacognition v0</li><li>Retention-focused mechanics</li></ul></div>
 			<div class="phase sr"><div class="ptag">Phase 3</div><h4>Public Beta</h4><ul><li>Landing &amp; messaging optimization</li><li>Referral / invite loops</li><li>Skill trees &amp; Feynman board v1</li></ul></div>
-			<div class="phase sr"><div class="ptag">Phase 4</div><h4>MVP &amp; Scale</h4><ul><li>AI cost &amp; performance tuning</li><li>Hallucination guardrails</li><li>Project-Based Reality Simulator</li></ul></div>
+			<div class="phase sr"><div class="ptag">Phase 4</div><h4>MVP &amp; Scale</h4><ul><li>AI cost &amp; performance tuning</li><li>Content quality guardrails</li><li>Project-based learning (exploratory)</li></ul></div>
 		</div>
 	</div>
 </section>
@@ -548,7 +559,7 @@
 		<div class="faq-list">
 			<details><summary>Who is NeurIQ for?</summary><p>STEM, CS and AI students, plus self-taught developers — anyone who wants to learn faster and actually retain it. It's especially friendly to learners who struggle with focus and consistency.</p></details>
 			<details><summary>What exactly is a "cognitive profile"?</summary><p>A live model of how you learn — your attention, pace, review needs and preferred difficulty — built from signals like response time, accuracy and session length. It powers every recommendation in the app.</p></details>
-			<details><summary>How is this different from other AI learning apps?</summary><p>Most stop at personalization and dashboards. NeurIQ stacks three engines together — cognitive profiling, project-based reality and visual skill trees — so learning ends in a real, portfolio-ready artifact.</p></details>
+			<details><summary>How is this different from other AI learning apps?</summary><p>Most stop at personalization and dashboards. NeurIQ stacks three engines together — cognitive profiling, adaptive practice and visual skill trees — so learning turns into retained, demonstrable skill.</p></details>
 			<details><summary>Is it free during beta?</summary><p>Yes. The private beta is completely free. The focus right now is validating value and gathering deep feedback before introducing any pricing.</p></details>
 			<details><summary>How fast is course generation?</summary><p>Around ten seconds for a full course — a 1-week plan, modules, a quiz and flashcards — generated asynchronously so you can keep working while it builds.</p></details>
 			<details><summary>How do I join the beta?</summary><p>Drop your email in the waitlist below. New learners are onboarded in small batches so each one gets a tight, well-supported experience.</p></details>
@@ -613,6 +624,16 @@ document.getElementById("contact-form").addEventListener("submit",function(e){e.
 function switchTab(tabId,btnEl){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById(tabId).classList.add('active');if(btnEl)btnEl.classList.add('active');}
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
 document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+(function(){
+  var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightbox-img');
+  document.querySelectorAll('.feat-img img, .browser-body img').forEach(function(img){
+    img.addEventListener('click',function(){lbImg.src=img.currentSrc||img.src;lb.classList.add('open');});
+  });
+  function closeLb(){lb.classList.remove('open');}
+  lb.addEventListener('click',closeLb);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
+})();
 </script>
+<div class="lightbox" id="lightbox"><span class="lightbox-hint">Click anywhere · Esc to close</span><img id="lightbox-img" src="" alt="Expanded screenshot"></div>
 </body>
 </html>
