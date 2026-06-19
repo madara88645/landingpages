@@ -4,13 +4,17 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NeurIQ | AI that adapts to how YOU learn</title>
-	<meta name="description" content="NeurIQ — An adaptive learning management system leveraging cognitive AI for personalized education.">
+	<meta name="description" content="NeurIQ is a cognitive-aware, project-based learning platform for STEM, CS & AI students. It profiles how you learn, then generates personalized courses, spaced-repetition reviews, skill trees and real-world projects around your brain.">
+	<meta property="og:title" content="NeurIQ — AI that adapts to how YOU learn">
+	<meta property="og:description" content="A cognitive-aware learning studio that turns any topic into a personalized plan, adaptive practice, and a portfolio-ready project.">
+	<meta property="og:type" content="website">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
-		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#7C3AED;--primary-l:#C4B5FD;--accent:#A78BFA;--rose:#F43F5E;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace}
+		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#7C3AED;--primary-l:#C4B5FD;--accent:#A78BFA;--rose:#F43F5E;--cyan:#22D3EE;--green:#34D399;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--border2:rgba(255,255,255,0.08);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace}
 		*{margin:0;padding:0;box-sizing:border-box}
 		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 		::selection{background:rgba(124,58,237,0.25);color:#fff}
+		a{text-decoration:none}
 
 		/* ── MESH GRADIENT BG ── */
 		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
@@ -19,7 +23,6 @@
 		.mb2{width:500px;height:500px;background:rgba(167,139,250,0.04);bottom:5%;right:-5%;animation-delay:-8s}
 		.mb3{width:600px;height:500px;background:rgba(124,58,237,0.04);top:40%;left:-15%;animation-delay:-15s}
 		@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,50px) scale(0.95)}100%{transform:translate(-10px,-40px) scale(1)}}
-
 		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
 			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
 			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
@@ -28,14 +31,20 @@
 		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
 		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.15),rgba(167,139,250,0.1),transparent)}
 		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
-		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fh);font-weight:700;font-size:1.4rem;color:#fff}
+		.nlogo{display:flex;align-items:center;gap:0.7rem;font-family:var(--fh);font-weight:700;font-size:1.4rem;color:#fff}
 		.nlogo svg{width:28px;height:28px;color:var(--accent);filter:drop-shadow(0 0 10px rgba(124,58,237,0.4))}
-		.nlinks{display:flex;gap:2.5rem;list-style:none}
-		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
+		.nlinks{display:flex;gap:2.2rem;list-style:none}
+		.nlinks a{font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
 		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
 		.nlinks a:hover{color:#fff}.nlinks a:hover::after{width:100%}
-		.ncta{display:inline-flex;align-items:center;padding:0.5rem 1.4rem;font-family:var(--fl);font-size:0.72rem;font-weight:500;color:#fff;background:var(--primary);border:none;border-radius:999px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(124,58,237,0.2)}
+		.ncta{display:inline-flex;align-items:center;padding:0.5rem 1.4rem;font-family:var(--fl);font-size:0.72rem;font-weight:500;color:#fff;background:var(--primary);border:none;border-radius:999px;transition:all 0.3s;box-shadow:0 0 20px rgba(124,58,237,0.2)}
 		.ncta:hover{box-shadow:0 0 30px rgba(124,58,237,0.35)}
+
+		/* ── SHARED ── */
+		.sec-tag{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--fl);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--accent)}
+		.sec-title{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
+		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:620px;margin:0 auto 3rem;line-height:1.7}
+		.center{text-align:center}
 
 		/* ── HERO ── */
 		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;perspective:1200px}
@@ -43,17 +52,21 @@
 		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.12);font-family:var(--fl);font-size:0.65rem;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
 		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
 		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
 		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem}
 		.hero h1 .w{display:block;color:#fff}
 		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--primary-l),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 		.hero-sub{font-family:var(--fh);font-size:1.2rem;color:var(--accent);font-weight:500;margin-bottom:0.75rem}
-		.hero-desc{font-size:1rem;color:var(--text3);max-width:620px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
-		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
-		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.82rem;font-weight:500;color:#fff;background:var(--primary);border:none;border-radius:999px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(124,58,237,0.2)}
+		.hero-desc{font-size:1rem;color:var(--text3);max-width:640px;margin:0 auto 1.6rem;font-weight:300;line-height:1.8}
+		.hero-oneliner{font-family:var(--fl);font-size:0.82rem;color:var(--text2);max-width:560px;margin:0 auto 2.5rem;padding:0.8rem 1.2rem;border-left:2px solid var(--primary);background:rgba(124,58,237,0.05);border-radius:0 10px 10px 0;text-align:left}
+		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.82rem;font-weight:500;color:#fff;background:var(--primary);border:none;border-radius:999px;transition:all 0.4s;box-shadow:0 0 25px rgba(124,58,237,0.2)}
 		.btn-pri:hover{box-shadow:0 0 40px rgba(124,58,237,0.3);transform:translateY(-2px)}
-		.btn-sec{display:inline-flex;align-items:center;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.82rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:999px;text-decoration:none;transition:all 0.3s}
+		.btn-sec{display:inline-flex;align-items:center;padding:0.85rem 2rem;font-family:var(--fl);font-size:0.82rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:999px;transition:all 0.3s}
 		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+		.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+		.hstat{text-align:center}
+		.hstat b{display:block;font-family:var(--fh);font-size:1.7rem;font-weight:700;color:#fff;line-height:1.1}
+		.hstat span{font-family:var(--fl);font-size:0.62rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase}
 
 		/* ── 3D BROWSER MOCKUP ── */
 		.browser-wrap{max-width:1000px;margin:0 auto;position:relative;transform:rotateX(6deg);transform-style:preserve-3d;transition:transform 0.6s ease;perspective:1200px}
@@ -63,68 +76,105 @@
 		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
 		.browser-bar .d{width:10px;height:10px;border-radius:50%}
 		.d-r{background:#F43F5E}.d-y{background:#EAB308}.d-g{background:#22C55E}
-		.browser-body img{width:100%;display:block;opacity:0.9}
+		.browser-body img{width:100%;display:block;opacity:0.92}
+
+		/* ── PROBLEM ── */
+		.problem{padding:6rem 3rem;background:var(--s1)}
+		.problem-in{max-width:1100px;margin:0 auto;text-align:center}
+		.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:left}
+		.pcard{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:18px;padding:2rem}
+		.pcard .pemoji{font-size:1.6rem;margin-bottom:1rem;display:block}
+		.pcard h4{font-family:var(--fh);font-size:1.1rem;color:#fff;margin-bottom:0.5rem;font-weight:600}
+		.pcard p{font-size:0.85rem;color:var(--text3);line-height:1.65}
+
+		/* ── PILLARS ── */
+		.pillars{padding:6rem 3rem;background:var(--bg)}
+		.pillars-in{max-width:1200px;margin:0 auto;text-align:center}
+		.pgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;text-align:left;margin-top:1rem}
+		.pillar{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:22px;padding:2.2rem;position:relative;overflow:hidden;transition:all 0.5s cubic-bezier(0.4,0,0.2,1)}
+		.pillar::before{content:'';position:absolute;inset:-1px;border-radius:22px;padding:1px;background:linear-gradient(135deg,rgba(124,58,237,0.25),transparent 55%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
+		.pillar:hover::before{opacity:1}
+		.pillar:hover{transform:translateY(-5px);box-shadow:0 18px 50px rgba(0,0,0,0.35)}
+		.pillar .pnum{font-family:var(--fl);font-size:0.7rem;font-weight:700;color:var(--accent);letter-spacing:0.1em}
+		.pillar .pvis{height:96px;margin:1rem 0 1.3rem;border-radius:14px;background:var(--s2);border:1px solid var(--border);display:grid;place-items:center;overflow:hidden}
+		.pillar h4{font-family:var(--fh);font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:0.6rem}
+		.pillar>p{font-size:0.86rem;color:var(--text3);line-height:1.65;margin-bottom:1.2rem}
+		.pillar ul{list-style:none;display:flex;flex-direction:column;gap:0.55rem}
+		.pillar li{font-size:0.82rem;color:var(--text2);display:flex;gap:0.6rem;align-items:flex-start;line-height:1.5}
+		.pillar li svg{width:15px;height:15px;color:var(--primary);flex-shrink:0;margin-top:3px}
 
 		/* ── HOW IT WORKS ── */
 		.hiw{padding:6rem 3rem;background:var(--s1)}
 		.hiw-in{max-width:1000px;margin:0 auto;text-align:center}
-		.sec-tag{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--fl);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--accent)}
-		.sec-title{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
-		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:600px;margin:0 auto 3rem;line-height:1.7}
-
-		.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:3rem;position:relative}
-		.steps::before{content:'';position:absolute;top:50px;left:15%;right:15%;height:1px;background:linear-gradient(to right,transparent,rgba(167,139,250,0.15),transparent)}
+		.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;margin-top:1rem}
+		.steps::before{content:'';position:absolute;top:40px;left:12%;right:12%;height:1px;background:linear-gradient(to right,transparent,rgba(167,139,250,0.18),transparent)}
 		.step{display:flex;flex-direction:column;align-items:center;text-align:center}
 		.step-icon{width:80px;height:80px;border-radius:50%;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;position:relative;box-shadow:0 8px 30px rgba(0,0,0,0.3)}
-		.step-icon::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:1px solid rgba(124,58,237,0.12);animation:ping 3s infinite;opacity:0.2}
-		@keyframes ping{0%{transform:scale(1);opacity:0.2}70%{transform:scale(1.15);opacity:0}100%{opacity:0}}
+		.step-icon .num{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;font-family:var(--fl);font-size:0.7rem;font-weight:700;display:grid;place-items:center}
 		.step-icon svg{width:32px;height:32px;color:var(--primary)}
-		.step h4{font-family:var(--fh);font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:0.3rem}
-		.step p{font-size:0.82rem;color:var(--text3);line-height:1.6}
+		.step h4{font-family:var(--fh);font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:0.4rem}
+		.step p{font-size:0.8rem;color:var(--text3);line-height:1.6}
 
 		/* ── FEATURES BENTO ── */
 		.features{padding:6rem 3rem;background:var(--bg);position:relative}
 		.features-in{max-width:1200px;margin:0 auto}
-
-		.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:1.25rem}
-		.bc{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2rem;
-			transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
-		.bc::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;
-			background:linear-gradient(135deg,rgba(124,58,237,0.12),transparent 50%);
-			-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
+		.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
+		.bc{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:1.8rem;transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;display:flex;flex-direction:column}
+		.bc::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,rgba(124,58,237,0.18),transparent 50%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
 		.bc:hover::before{opacity:1}
-		.bc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.3),0 0 30px rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.12)}
+		.bc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.3);border-color:rgba(124,58,237,0.12)}
 		.bc.c2x2{grid-column:span 2;grid-row:span 2}
 		.bc.c2x1{grid-column:span 2}
-		.bc.c4x1{grid-column:span 4}
-
-		.bc .feat-img{width:100%;height:200px;border-radius:14px;overflow:hidden;margin-bottom:1.25rem;position:relative;border:1px solid var(--border)}
-		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.8;transition:all 0.5s}
+		.bc .feat-img{width:100%;flex:1;min-height:180px;border-radius:14px;overflow:hidden;margin-bottom:1.2rem;position:relative;border:1px solid var(--border)}
+		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.82;transition:all 0.5s}
 		.bc:hover .feat-img img{opacity:1;transform:scale(1.03)}
 		.bc .feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
+		.bc .icon{width:34px;height:34px;color:var(--accent);opacity:0.5;transition:opacity 0.3s;margin-bottom:0.9rem}
+		.bc:hover .icon{opacity:0.9}
+		.bc h4{font-family:var(--fh);font-size:1.12rem;font-weight:600;color:#fff;margin-bottom:0.3rem}
+		.bc.c2x2 h4{font-size:1.4rem}
+		.bc p{font-size:0.82rem;color:var(--text3);line-height:1.6}
+		.bc .tag{display:inline-block;margin-top:0.7rem;font-family:var(--fl);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:rgba(124,58,237,0.08);padding:0.25rem 0.6rem;border-radius:6px}
 
-		.bc h4{font-family:var(--fh);font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:0.35rem}
-		.bc p{font-size:0.85rem;color:var(--text3);line-height:1.65}
-		.bc .icon{width:36px;height:36px;color:var(--accent);opacity:0.4;transition:opacity 0.3s;margin-bottom:auto}
-		.bc:hover .icon{opacity:0.8}
+		/* ── TECH / UNDER THE HOOD ── */
+		.tech{padding:6rem 3rem;background:var(--s1)}
+		.tech-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
+		.tech-copy h2{font-family:var(--fh);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:-0.02em}
+		.tech-copy>p{font-size:0.9rem;color:var(--text3);line-height:1.75;margin-bottom:1.5rem}
+		.tech-copy ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+		.tech-copy li{font-size:0.85rem;color:var(--text2);display:flex;gap:0.6rem;align-items:flex-start}
+		.tech-copy li svg{width:16px;height:16px;color:var(--cyan);flex-shrink:0;margin-top:3px}
+		.tstack{display:flex;flex-direction:column;gap:1rem}
+		.tlayer{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem}
+		.tlayer .th{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.7rem}
+		.tlayer .th b{font-family:var(--fh);font-size:0.92rem;color:#fff;font-weight:600}
+		.tlayer .th .path{margin-left:auto;font-family:var(--fl);font-size:0.62rem;color:var(--text3)}
+		.tlayer .tags span{display:inline-block;font-family:var(--fl);font-size:0.66rem;padding:0.28rem 0.65rem;border-radius:7px;background:var(--s2);border:1px solid var(--border);color:var(--text2);margin:0.2rem 0.25rem 0 0}
 
-		.bc.c4x1{padding:0;display:flex;align-items:stretch;min-height:220px}
-		.bc.c4x1 .feat-text{padding:2rem;flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
-		.bc.c4x1 .feat-side{position:absolute;right:0;top:0;width:60%;height:100%;overflow:hidden}
-		.bc.c4x1 .feat-side img{width:100%;height:100%;object-fit:cover;object-position:left top;opacity:0.4;transition:opacity 0.5s}
-		.bc.c4x1:hover .feat-side img{opacity:0.75}
-		.bc.c4x1 .feat-side::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--bg),transparent);z-index:1}
+		/* ── ROADMAP ── */
+		.roadmap{padding:6rem 3rem;background:var(--bg)}
+		.roadmap-in{max-width:1200px;margin:0 auto;text-align:center}
+		.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;text-align:left;margin-top:1rem}
+		.phase{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:18px;padding:1.6rem}
+		.phase.active{border-color:rgba(124,58,237,0.35);background:linear-gradient(160deg,rgba(124,58,237,0.08),var(--glass))}
+		.phase .ptag{font-family:var(--fl);font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+		.phase.active .ptag{color:var(--accent)}
+		.phase h4{font-family:var(--fh);font-size:1.05rem;font-weight:600;color:#fff;margin:0.5rem 0 0.8rem}
+		.phase ul{list-style:none;display:flex;flex-direction:column;gap:0.45rem}
+		.phase li{font-size:0.78rem;color:var(--text3);display:flex;gap:0.5rem;line-height:1.5}
+		.phase li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--primary);margin-top:7px;flex-shrink:0}
+		.phase .live{display:inline-block;margin-top:1rem;font-family:var(--fl);font-size:0.62rem;font-weight:600;color:var(--green);background:rgba(52,211,153,0.1);padding:0.25rem 0.7rem;border-radius:7px}
 
 		/* ── ABOUT ── */
 		.about{padding:6rem 3rem;background:var(--s1)}
 		.about-in{max-width:1000px;margin:0 auto;display:flex;gap:3rem;align-items:center;flex-wrap:wrap}
 		.about-photo{width:200px;height:200px;border-radius:20px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,0.4)}
-		.about-photo::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent);z-index:1}
-		.about-photo span{font-family:var(--fh);font-size:2.5rem;font-weight:700;color:var(--text3);position:relative;z-index:2}
+		.about-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+		.about-photo span{font-family:var(--fh);font-size:2.5rem;font-weight:700;color:var(--text3);position:relative;z-index:1}
 		.about-text{flex:1;min-width:300px}
 		.about-text h3{font-family:var(--fh);font-size:clamp(1.5rem,3vw,2rem);font-weight:700;color:#fff;margin-bottom:1rem}
 		.about-text p{font-size:0.95rem;color:var(--text3);line-height:1.8;margin-bottom:0.75rem}
-		.about-text a{display:inline-flex;align-items:center;gap:0.4rem;color:var(--primary);font-weight:500;text-decoration:none;transition:color 0.3s;font-size:0.9rem}
+		.about-text a{display:inline-flex;align-items:center;gap:0.4rem;color:var(--primary);font-weight:500;font-size:0.9rem;transition:color 0.3s}
 		.about-text a:hover{color:#fff}
 		.about-text a svg{width:16px;height:16px}
 
@@ -140,9 +190,21 @@
 		.tab-content h4{font-family:var(--fh);font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:0.75rem}
 		.tab-content p{font-size:0.88rem;color:var(--text3);max-width:550px;margin:0 auto;line-height:1.7}
 
+		/* ── FAQ ── */
+		.faq{padding:6rem 3rem;background:var(--s1)}
+		.faq-in{max-width:760px;margin:0 auto;text-align:center}
+		.faq-list{margin-top:1rem;text-align:left}
+		details{background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:14px;padding:0 1.4rem;margin-bottom:0.8rem;transition:border-color 0.3s}
+		details[open]{border-color:rgba(124,58,237,0.25)}
+		summary{cursor:pointer;padding:1.2rem 0;font-family:var(--fh);font-weight:600;font-size:1rem;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+		summary::-webkit-details-marker{display:none}
+		summary::after{content:'+';color:var(--primary);font-size:1.4rem;font-weight:300;transition:transform 0.3s}
+		details[open] summary::after{transform:rotate(45deg)}
+		details p{color:var(--text3);font-size:0.85rem;padding:0 0 1.2rem;line-height:1.7}
+
 		/* ── WAITLIST ── */
-		.waitlist{padding:6rem 3rem;background:var(--s1);position:relative;overflow:hidden}
-		.waitlist::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent,rgba(124,58,237,0.02));pointer-events:none}
+		.waitlist{padding:6rem 3rem;background:var(--bg);position:relative;overflow:hidden}
+		.waitlist::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 100%,rgba(124,58,237,0.06),transparent);pointer-events:none}
 		.waitlist-in{max-width:600px;margin:0 auto;text-align:center;position:relative;z-index:1}
 		.waitlist-in h2{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin-bottom:1rem}
 		.waitlist-in>p{color:var(--text3);margin-bottom:2rem;font-size:0.95rem}
@@ -154,10 +216,9 @@
 		.wform-note{font-size:0.7rem;color:var(--text3);margin-top:1rem}
 
 		/* ── FOOTER + CONTACT ── */
-		.footer{padding:5rem 3rem 2.5rem;background:var(--bg);border-top:1px solid var(--border)}
+		.footer{padding:5rem 3rem 2.5rem;background:var(--s1);border-top:1px solid var(--border)}
 		.footer-in{max-width:1200px;margin:0 auto}
 		.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-bottom:4rem}
-
 		.f-form h3{font-family:var(--fl);font-size:0.65rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem}
 		.f-form h4{font-family:var(--fh);font-size:1.4rem;font-weight:600;color:#fff;margin-bottom:0.5rem}
 		.f-form>p{font-size:0.85rem;color:var(--text3);margin-bottom:1.5rem}
@@ -166,31 +227,30 @@
 		.cf input:focus,.cf textarea:focus{border-color:var(--primary)}
 		.cf button{padding:0.75rem 1.5rem;border-radius:10px;background:#fff;color:#000;font-family:var(--fl);font-size:0.82rem;font-weight:600;border:none;cursor:pointer;transition:background 0.3s;width:fit-content}
 		.cf button:hover{background:#ddd}
-
 		.f-links h3{font-family:var(--fl);font-size:0.65rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem}
-		.f-link{display:block;margin-bottom:1.2rem;text-decoration:none;transition:all 0.3s}
+		.f-link{display:block;margin-bottom:1.2rem;transition:all 0.3s}
 		.f-link h5{font-family:var(--fh);font-size:1rem;font-weight:500;color:#fff;margin-bottom:0.1rem;transition:color 0.3s}
 		.f-link p{font-size:0.75rem;color:var(--text3)}
 		.f-link:hover h5{color:var(--primary)}
-
 		.f-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap;gap:1rem}
 		.f-bottom .brand{font-family:var(--fh);font-weight:700;color:#fff;font-size:1rem}
 		.f-bottom .brand span{display:block;font-size:0.65rem;font-weight:400;color:var(--text3);margin-top:0.15rem}
 		.f-bottom-links{display:flex;gap:2rem}
-		.f-bottom-links a{font-family:var(--fl);font-size:0.7rem;color:var(--text3);text-decoration:none;transition:color 0.3s}
+		.f-bottom-links a{font-family:var(--fl);font-size:0.7rem;color:var(--text3);transition:color 0.3s}
 		.f-bottom-links a:hover{color:#fff}
 
 		.sr{opacity:0;transform:translateY(30px);transition:all 0.7s ease}.sr.v{opacity:1;transform:translateY(0)}
 
 		@media(max-width:1024px){
-			.bento{grid-template-columns:1fr}.bc.c2x2,.bc.c2x1,.bc.c4x1{grid-column:span 1;grid-row:span 1}
-			.bc.c4x1{flex-direction:column}.bc.c4x1 .feat-side{position:relative;width:100%;height:200px}
-			.bc.c4x1 .feat-side::before{background:linear-gradient(to bottom,var(--bg),transparent)}
-			.steps{grid-template-columns:1fr;gap:2rem}.steps::before{display:none}
-			.f-grid{grid-template-columns:1fr}
+			.nav-in{padding:0 1.5rem}.nlinks{display:none}
+			.bento{grid-template-columns:1fr 1fr}.bc.c2x2,.bc.c2x1{grid-column:span 1;grid-row:span 1}
+			.steps{grid-template-columns:1fr 1fr;gap:2rem}.steps::before{display:none}
+			.pgrid,.pgrid3,.rgrid{grid-template-columns:1fr 1fr}
+			.tech-in,.f-grid{grid-template-columns:1fr;gap:2.5rem}
 			.about-in{flex-direction:column;text-align:center}
-			.nlinks{display:none}
+			.hero,.problem,.pillars,.hiw,.features,.tech,.roadmap,.about,.usecases,.faq,.waitlist{padding-left:1.5rem;padding-right:1.5rem}
 		}
+		@media(max-width:620px){.bento,.pgrid,.pgrid3,.steps,.rgrid{grid-template-columns:1fr}}
 	</style>
 </head>
 <body>
@@ -204,25 +264,102 @@
 		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
 		NeurIQ
 	</a>
-	<ul class="nlinks"><li><a href="#about">About</a></li><li><a href="#features">Features</a></li><li><a href="#contact">Contact</a></li></ul>
+	<ul class="nlinks">
+		<li><a href="#pillars">Why NeurIQ</a></li>
+		<li><a href="#how-it-works">How it works</a></li>
+		<li><a href="#features">Features</a></li>
+		<li><a href="#tech">Under the hood</a></li>
+		<li><a href="#about">About</a></li>
+	</ul>
 	<a href="#waitlist" class="ncta">Join Beta</a>
 </div></nav>
 
 <!-- HERO -->
 <section class="hero">
 	<div class="hero-inner">
-		<div class="hero-chip"><span class="dot"></span>Private Beta Opening Soon</div>
-		<h1><span class="w">Learn smarter,</span><span class="g">not harder.</span></h1>
+		<div class="hero-chip"><span class="dot"></span>Private Beta · Built for STEM, CS &amp; AI students</div>
+		<h1><span class="w">Learn the way</span><span class="g">your brain works.</span></h1>
 		<p class="hero-sub">AI that adapts to how YOU learn.</p>
-		<p class="hero-desc">NeurIQ uses advanced cognitive modeling to personalize your learning journey. We match content to your unique processing style, track your progress, and help you master any subject faster.</p>
+		<p class="hero-desc">NeurIQ builds a living cognitive profile of how you learn — your attention, pace and forgetting curve — then generates personalized courses, spaced-repetition reviews, skill trees and real-world projects around it.</p>
+		<p class="hero-oneliner">A cognitive-aware, project-based learning studio that turns any topic into a personalized plan, adaptive practice, and a portfolio-ready project.</p>
 		<div class="hero-btns">
-			<a href="#waitlist" class="btn-pri">Join Private Beta</a>
-			<a href="#how-it-works" class="btn-sec">See How It Works</a>
+			<a href="#waitlist" class="btn-pri">Join the Private Beta →</a>
+			<a href="#how-it-works" class="btn-sec">See how it works</a>
+		</div>
+		<div class="hero-stats">
+			<div class="hstat"><b>~10s</b><span>To generate a course</span></div>
+			<div class="hstat"><b>9</b><span>AI learning tools</span></div>
+			<div class="hstat"><b>3</b><span>Cognitive engines</span></div>
+			<div class="hstat"><b>EN / TR</b><span>Bilingual</span></div>
 		</div>
 		<div class="browser-wrap sr">
 			<div class="browser-mock">
 				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
-				<div class="browser-body"><img src="../assets/dashboard.PNG" alt="NeurIQ Student Dashboard" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop'"></div>
+				<div class="browser-body"><img src="../assets/neuriq-dashboard.png" alt="NeurIQ Student Dashboard" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop'"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+	<div class="problem-in">
+		<div class="sec-tag center" style="justify-content:center">The Problem</div>
+		<h2 class="sec-title">Most learning tools treat every brain the same.</h2>
+		<p class="sec-desc">Generic courses, content you forget within a week, and dashboards full of numbers that never tell you what to do next. The result is wasted hours and stalled motivation.</p>
+		<div class="pgrid">
+			<div class="pcard sr"><span class="pemoji">📉</span><h4>You forget faster than you learn</h4><p>Without spaced repetition timed to <em>your</em> forgetting curve, most new material is gone within days.</p></div>
+			<div class="pcard sr"><span class="pemoji">🎯</span><h4>One-size-fits-all content</h4><p>Courses ignore your pace, attention span and prior knowledge — so you're either bored or lost, rarely in flow.</p></div>
+			<div class="pcard sr"><span class="pemoji">🧩</span><h4>Learning ≠ doing</h4><p>Watching lectures doesn't build a portfolio. Without real projects, knowledge never becomes a demonstrable skill.</p></div>
+		</div>
+	</div>
+</section>
+
+<!-- PILLARS / WHY NEURIQ -->
+<section id="pillars" class="pillars">
+	<div class="pillars-in">
+		<div class="sec-tag center" style="justify-content:center">Why NeurIQ</div>
+		<h2 class="sec-title">Three engines you won't find stacked together anywhere else.</h2>
+		<p class="sec-desc">Personalization and analytics are table stakes now. NeurIQ's real edge is the combination of cognitive profiling, project-based reality and visual mastery — built into one continuous loop.</p>
+		<div class="pgrid3">
+			<div class="pillar sr">
+				<div class="pnum">01</div>
+				<div class="pvis">
+					<svg width="180" height="76" viewBox="0 0 180 76" fill="none"><defs><linearGradient id="g1" x1="0" y1="0" x2="180" y2="0"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs><polyline points="10,60 38,46 64,52 90,30 116,38 142,16 170,24" stroke="url(#g1)" stroke-width="2.5" fill="none"/><circle cx="90" cy="30" r="3.5" fill="#22D3EE"/><circle cx="142" cy="16" r="3.5" fill="#A78BFA"/><line x1="10" y1="68" x2="170" y2="68" stroke="#1E1E28"/></svg>
+				</div>
+				<h4>Cognitive Profiling Engine</h4>
+				<p>Signals like response time, accuracy, confidence and session length build a live model of how you learn — and update it every session.</p>
+				<ul>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Attention, pace, review-need &amp; difficulty preference</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Powered by a dedicated Python analytics service</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Drives every recommendation in the app</li>
+				</ul>
+			</div>
+			<div class="pillar sr">
+				<div class="pnum">02</div>
+				<div class="pvis">
+					<svg width="180" height="76" viewBox="0 0 180 76" fill="none"><rect x="16" y="14" width="44" height="20" rx="5" stroke="#7C3AED" stroke-width="2"/><rect x="68" y="14" width="44" height="20" rx="5" stroke="#22D3EE" stroke-width="2"/><rect x="120" y="14" width="44" height="20" rx="5" stroke="#F43F5E" stroke-width="2"/><rect x="42" y="48" width="44" height="20" rx="5" stroke="#34D399" stroke-width="2"/><rect x="94" y="48" width="44" height="20" rx="5" stroke="#A78BFA" stroke-width="2"/><line x1="38" y1="34" x2="64" y2="48" stroke="#2a2a3a"/><line x1="90" y1="34" x2="116" y2="48" stroke="#2a2a3a"/></svg>
+				</div>
+				<h4>Project-Based Reality Simulator</h4>
+				<p>Turn a topic into a simulated real-world project — a brief, a workspace and rubric-based feedback — so learning ends in something you can ship.</p>
+				<ul>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>From "I studied it" to "I built it"</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Portfolio &amp; CV-ready outcomes</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Multi-agent tutor + reviewer concept</li>
+				</ul>
+			</div>
+			<div class="pillar sr">
+				<div class="pnum">03</div>
+				<div class="pvis">
+					<svg width="150" height="76" viewBox="0 0 150 76" fill="none"><line x1="75" y1="12" x2="40" y2="40" stroke="#2a2a3a" stroke-width="1.5"/><line x1="75" y1="12" x2="110" y2="40" stroke="#2a2a3a" stroke-width="1.5"/><line x1="40" y1="40" x2="26" y2="66" stroke="#2a2a3a" stroke-width="1.5"/><line x1="40" y1="40" x2="56" y2="66" stroke="#2a2a3a" stroke-width="1.5"/><line x1="110" y1="40" x2="124" y2="66" stroke="#2a2a3a" stroke-width="1.5"/><circle cx="75" cy="12" r="7" fill="#7C3AED"/><circle cx="40" cy="40" r="6" fill="#22D3EE"/><circle cx="110" cy="40" r="6" fill="#34D399"/><circle cx="26" cy="66" r="5" fill="#16161D" stroke="#22D3EE"/><circle cx="56" cy="66" r="5" fill="#16161D" stroke="#22D3EE"/><circle cx="124" cy="66" r="5" fill="#16161D" stroke="#34D399"/></svg>
+				</div>
+				<h4>Interactive Skill Trees</h4>
+				<p>Every topic becomes a visual mastery map. Nodes hold theory, quizzes and flashcards, and light up as you progress — your knowledge made tangible.</p>
+				<ul>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Auto-laid-out DAG with mastery colors</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Theory + quiz + flashcard nodes</li>
+					<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Shareable as social proof of skill</li>
+				</ul>
 			</div>
 		</div>
 	</div>
@@ -231,24 +368,29 @@
 <!-- HOW IT WORKS -->
 <section id="how-it-works" class="hiw">
 	<div class="hiw-in">
-		<div class="sec-tag">How It Works</div>
-		<h2 class="sec-title">Discover steps to transform your learning.</h2>
-		<p class="sec-desc">Forget one-size-fits-all education. NeurIQ maps your cognitive profile to generate interactive quizzes, knowledge maps, and AI tutors tailored specifically to you.</p>
+		<div class="sec-tag center" style="justify-content:center">How It Works</div>
+		<h2 class="sec-title">One prompt to a complete, personalized learning loop.</h2>
+		<p class="sec-desc">Type a topic — or paste your own notes. In about ten seconds NeurIQ generates a structured plan and all the practice around it, then keeps adapting as you go.</p>
 		<div class="steps">
 			<div class="step sr">
-				<div class="step-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
-				<h4>1. Cognitive Profiling</h4>
-				<p>The AI analyzes how you process information, identifying your strengths and natural learning patterns.</p>
+				<div class="step-icon"><span class="num">1</span><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></div>
+				<h4>Describe a topic</h4>
+				<p>"Introduction to Machine Learning" — or upload your lecture notes &amp; materials.</p>
 			</div>
 			<div class="step sr">
-				<div class="step-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
-				<h4>2. Adaptive Content</h4>
-				<p>Content adjusts dynamically in difficulty and format to keep you challenged without overwhelming you.</p>
+				<div class="step-icon"><span class="num">2</span><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+				<h4>Get a full course</h4>
+				<p>A 1-week plan with modules, a quiz and 10 flashcards — generated and ready.</p>
 			</div>
 			<div class="step sr">
-				<div class="step-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg></div>
-				<h4>3. Accelerated Mastery</h4>
-				<p>Targeted quizzes and metacognitive tracking ensure deep understanding and long-term retention.</p>
+				<div class="step-icon"><span class="num">3</span><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div>
+				<h4>Practice &amp; reinforce</h4>
+				<p>Spaced repetition, the Feynman board and an AI tutor lock it into long-term memory.</p>
+			</div>
+			<div class="step sr">
+				<div class="step-icon"><span class="num">4</span><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+				<h4>The system adapts</h4>
+				<p>Your cognitive profile refines after each session, retuning plans, reviews &amp; difficulty.</p>
 			</div>
 		</div>
 	</div>
@@ -257,37 +399,101 @@
 <!-- FEATURES -->
 <section id="features" class="features">
 	<div class="features-in">
-		<div class="sec-tag" style="color:var(--primary)">Features</div>
-		<h2 class="sec-title">Built for how YOU think.</h2>
-		<p class="sec-desc">Our platform dynamically adjusts to your pace and knowledge gaps. From smart quiz generation to metacognitive tracking, every feature is designed to optimize your retention.</p>
-
+		<div class="sec-tag center" style="justify-content:center;color:var(--primary)">The Full Toolkit</div>
+		<h2 class="sec-title center">Nine AI-powered tools in one focused workspace.</h2>
+		<p class="sec-desc center">Everything a serious learner needs — generation, practice, reflection and analytics — without tab-hopping across five different apps.</p>
 		<div class="bento">
 			<div class="bc c2x2 sr">
-				<div class="feat-img"><img src="../assets/cognitiveana.PNG" alt="Metacognition and Analytics" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
-				<h4>Personalized AI Learning</h4>
-				<p>Adapts to your unique cognitive style and learning pace. The system analyzes how you process information and adjusts content delivery to match your brain's natural patterns.</p>
+				<div class="feat-img"><img src="../assets/neuriq-analytics-charts.png" alt="Cognitive analytics &amp; metacognition" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<h4>Cognitive Analytics &amp; Profile</h4>
+				<p>Retention heatmaps, forgetting-curve projections and a metacognition view that show not just <em>what</em> you know, but how you learn — and exactly what to review next.</p>
+				<span class="tag">Cognitive Engine</span>
 			</div>
 			<div class="bc c2x1 sr">
-				<h4>Smart Quiz Generation</h4>
-				<p>Creates custom assessments based on your knowledge gaps. Our AI identifies exactly what you need to practice.</p>
+				<div class="feat-img"><img src="../assets/neuriq-course-generate.png" alt="AI Course Generator" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+				<h4>AI Course Generator</h4>
+				<p>Any topic → a structured plan, modules, a quiz and flashcards in about ten seconds. Async &amp; queued, so you keep working while it builds.</p>
 			</div>
 			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-				<h4>Metacognitive Tracking</h4>
-				<p>Understand your learning strategies and identify what works best.</p>
+				<div class="feat-img"><img src="../assets/neuriq-study-plan.png" alt="Spaced Repetition" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+				<h4>Spaced Repetition</h4>
+				<p>Reviews timed to your personal forgetting curve — not a generic interval.</p>
 			</div>
 			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--primary)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-				<h4>Adaptive Content</h4>
-				<p>Adjusts difficulty based on your performance to keep you challenged.</p>
+				<div class="feat-img"><img src="../assets/neuriq-flashcards.png" alt="Smart Flashcards" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+				<h4>Smart Flashcards</h4>
+				<p>Auto-generated from your material, with flip-based recall and mastery tracking.</p>
 			</div>
-			<div class="bc c4x1 sr">
-				<div class="feat-text">
-					<h4>Multi-Subject Support</h4>
-					<p>Works across any subject or topic you want to master. From mathematics to languages, NeurIQ adapts to your learning needs.</p>
-				</div>
-				<div class="feat-side"><img src="../assets/Ekran%20Al%C4%B1nt%C4%B1s%C4%B1.PNG" alt="My Courses Dashboard" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+			<div class="bc sr">
+				<div class="feat-img"><img src="../assets/neuriq-ai-tutor.png" alt="AI Tutor" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+				<h4>AI Tutor</h4>
+				<p>A contextual chat tutor that knows your course and answers in plain language.</p>
 			</div>
+			<div class="bc sr">
+				<div class="feat-img"><img src="../assets/neuriq-feynman.png" alt="Feynman Board" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+				<h4>Feynman Board</h4>
+				<p>Explain a concept in your own words; the AI surfaces your misunderstandings.</p>
+			</div>
+			<div class="bc sr">
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+				<h4>Mock Interview</h4>
+				<p>Practice technical interviews with AI questions, timing and performance history.</p>
+			</div>
+			<div class="bc sr">
+				<div class="feat-img"><img src="../assets/neuriq-skilltree.png" alt="Career Pathway" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/></svg>
+				<h4>Career Pathway</h4>
+				<p>A skill-tree progression with levels and XP that maps learning to a real goal.</p>
+			</div>
+			<div class="bc sr">
+				<div class="feat-img"><img src="../assets/neuriq-notes.png" alt="Smart Notes &amp; Copilot" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'"></div>
+				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+				<h4>Smart Notes &amp; Copilot</h4>
+				<p>Markdown notes with one-click "summarize" and "make flashcards" actions.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- TECH / UNDER THE HOOD -->
+<section id="tech" class="tech">
+	<div class="tech-in">
+		<div class="tech-copy sr">
+			<div class="sec-tag">Under the Hood</div>
+			<h2>Production-grade engineering, not a prototype.</h2>
+			<p>NeurIQ is a full-stack monorepo with a dedicated cognitive-analytics microservice. Type safety, accessibility, bilingual i18n and defensive null-handling are baked into the codebase standards — not bolted on later.</p>
+			<ul>
+				<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Async, queued AI generation with job polling &amp; resilient fallbacks</li>
+				<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Cognitive analytics isolated in a Python service for clean separation</li>
+				<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Light/dark theming, EN/TR i18n and a custom design system</li>
+				<li><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Playwright E2E plus unit tests across client and server</li>
+			</ul>
+		</div>
+		<div class="tstack sr">
+			<div class="tlayer"><div class="th"><span>🎨</span><b>Frontend</b><span class="path">client/</span></div><div class="tags"><span>React 18</span><span>Vite</span><span>TypeScript</span><span>Tailwind CSS</span><span>Framer Motion</span><span>Recharts</span></div></div>
+			<div class="tlayer"><div class="th"><span>⚙️</span><b>Backend API</b><span class="path">server/</span></div><div class="tags"><span>Node.js</span><span>Express</span><span>Prisma ORM</span><span>PostgreSQL</span><span>JWT Auth</span><span>Jest</span></div></div>
+			<div class="tlayer"><div class="th"><span>🧠</span><b>Cognitive Service</b><span class="path">python_service/</span></div><div class="tags"><span>FastAPI</span><span>Profiler engine</span><span>Memory model</span><span>Analytics</span></div></div>
+			<div class="tlayer"><div class="th"><span>🤖</span><b>AI &amp; Quality</b><span class="path">infra</span></div><div class="tags"><span>LLM generation</span><span>Prompt caching</span><span>Playwright E2E</span><span>CI checks</span></div></div>
+		</div>
+	</div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="roadmap">
+	<div class="roadmap-in">
+		<div class="sec-tag center" style="justify-content:center">Roadmap</div>
+		<h2 class="sec-title">A focused path from private beta to scalable MVP.</h2>
+		<p class="sec-desc">We're deliberately validating the core loop with real power users before widening the funnel — proving activation and retention first, then growing.</p>
+		<div class="rgrid">
+			<div class="phase active sr"><div class="ptag">Phase 1 · Now</div><h4>Private Beta</h4><ul><li>Onboarding + AI course generation</li><li>SRS &amp; core cognitive profiling</li><li>Tight feedback loop with early users</li></ul><span class="live">● Live</span></div>
+			<div class="phase sr"><div class="ptag">Phase 2</div><h4>Iteration Sprint</h4><ul><li>Profiling engine v1 (core signals)</li><li>SRS dashboard &amp; metacognition v0</li><li>Retention-focused mechanics</li></ul></div>
+			<div class="phase sr"><div class="ptag">Phase 3</div><h4>Public Beta</h4><ul><li>Landing &amp; messaging optimization</li><li>Referral / invite loops</li><li>Skill trees &amp; Feynman board v1</li></ul></div>
+			<div class="phase sr"><div class="ptag">Phase 4</div><h4>MVP &amp; Scale</h4><ul><li>AI cost &amp; performance tuning</li><li>Hallucination guardrails</li><li>Project-Based Reality Simulator</li></ul></div>
 		</div>
 	</div>
 </section>
@@ -295,12 +501,15 @@
 <!-- ABOUT -->
 <section id="about" class="about">
 	<div class="about-in sr">
-		<div class="about-photo"><span>MO</span></div>
+		<div class="about-photo">
+			<img src="../assets/userprofilepicture.png" alt="Mehmet Ozel" onerror="this.style.display='none'">
+			<span>MO</span>
+		</div>
 		<div class="about-text">
 			<div class="sec-tag">About</div>
 			<h3>Built by a student, for students.</h3>
-			<p>I'm a Year 1 AI undergrad at Bournemouth University. Between juggling AWS certs, AI, and Neuroscience, I realized: everyone learns differently, but most tools treat us all the same.</p>
-			<p>NeurIQ is my answer - a learning companion that adapts to YOUR brain, not a one-size-fits-all syllabus.</p>
+			<p>I'm a Year 1 AI &amp; Data Science undergrad at Bournemouth University. Between juggling AI, data science and a real interest in how the brain learns, I kept hitting the same wall: everyone learns differently, but almost every tool treats us all the same.</p>
+			<p>NeurIQ is my answer — a learning companion that adapts to <em>your</em> brain, not a one-size-fits-all syllabus. I'm building it in the open, shipping fast, and validating every feature with real users.</p>
 			<a href="#contact">Get in touch directly <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>
 		</div>
 	</div>
@@ -309,7 +518,7 @@
 <!-- USE CASES -->
 <section class="usecases">
 	<div class="usecases-in">
-		<div class="sec-tag">Use Cases</div>
+		<div class="sec-tag center" style="justify-content:center">Use Cases</div>
 		<h2 class="sec-title">Who is NeurIQ for?</h2>
 		<div class="tabs-nav">
 			<button class="tab-btn active" onclick="switchTab('tab1',this)">University Students</button>
@@ -317,16 +526,32 @@
 			<button class="tab-btn" onclick="switchTab('tab3',this)">Lifelong Learners</button>
 		</div>
 		<div id="tab1" class="tab-content active">
-			<h4>Tackling Complex STEM Subjects</h4>
-			<p>University coursework can be overwhelming. NeurIQ breaks down dense academic materials, creating personalized study maps and quizzes to help you ace your midterms and finals with less stress.</p>
+			<h4>Tackling complex STEM subjects</h4>
+			<p>University coursework can be overwhelming. NeurIQ breaks down dense academic material into personalized study maps and quizzes — so you can ace midterms and finals with less stress and better retention.</p>
 		</div>
 		<div id="tab2" class="tab-content">
-			<h4>Mastering New Frameworks & AI</h4>
-			<p>Learning to code or diving into Machine Learning requires practice. Our system generates adaptive coding quizzes and algorithmic challenges based on exactly where you are getting stuck.</p>
+			<h4>Mastering new frameworks &amp; AI</h4>
+			<p>Learning to code or diving into machine learning takes deliberate practice. NeurIQ generates adaptive coding quizzes and challenges based on exactly where you're getting stuck.</p>
 		</div>
 		<div id="tab3" class="tab-content">
-			<h4>Accelerating Academic Research</h4>
-			<p>Whether you are exploring neuroscience or picking up a new language, NeurIQ adapts to your specific demands, tracking your metacognition so you retain knowledge efficiently.</p>
+			<h4>Learning anything that sticks</h4>
+			<p>Whether you're exploring neuroscience or picking up a new language, NeurIQ adapts to your demands and tracks your metacognition so you retain knowledge efficiently over time.</p>
+		</div>
+	</div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+	<div class="faq-in">
+		<div class="sec-tag center" style="justify-content:center">FAQ</div>
+		<h2 class="sec-title">Questions, answered.</h2>
+		<div class="faq-list">
+			<details><summary>Who is NeurIQ for?</summary><p>STEM, CS and AI students, plus self-taught developers — anyone who wants to learn faster and actually retain it. It's especially friendly to learners who struggle with focus and consistency.</p></details>
+			<details><summary>What exactly is a "cognitive profile"?</summary><p>A live model of how you learn — your attention, pace, review needs and preferred difficulty — built from signals like response time, accuracy and session length. It powers every recommendation in the app.</p></details>
+			<details><summary>How is this different from other AI learning apps?</summary><p>Most stop at personalization and dashboards. NeurIQ stacks three engines together — cognitive profiling, project-based reality and visual skill trees — so learning ends in a real, portfolio-ready artifact.</p></details>
+			<details><summary>Is it free during beta?</summary><p>Yes. The private beta is completely free. The focus right now is validating value and gathering deep feedback before introducing any pricing.</p></details>
+			<details><summary>How fast is course generation?</summary><p>Around ten seconds for a full course — a 1-week plan, modules, a quiz and flashcards — generated asynchronously so you can keep working while it builds.</p></details>
+			<details><summary>How do I join the beta?</summary><p>Drop your email in the waitlist below. New learners are onboarded in small batches so each one gets a tight, well-supported experience.</p></details>
 		</div>
 	</div>
 </section>
@@ -334,10 +559,10 @@
 <!-- WAITLIST -->
 <section id="waitlist" class="waitlist">
 	<div class="waitlist-in sr">
-		<h2>Join the NeurIQ beta waitlist.</h2>
-		<p>Get early access to an AI study companion that actually understands you. Drop your email to be among the first invited to the private beta.</p>
+		<h2>Learn the way your brain wants to.</h2>
+		<p>Get early access to an AI study companion that actually understands how you learn. Drop your email to be among the first invited to the private beta — free while we're in beta.</p>
 		<form id="waitlist-form" class="wform">
-			<input type="email" name="email" required placeholder="Enter your email" aria-label="Enter your email">
+			<input type="email" name="email" required placeholder="you@university.edu" aria-label="Enter your email">
 			<button type="submit">Join Beta</button>
 		</form>
 		<p class="wform-note">We respect your privacy. No spam, ever.</p>
@@ -351,7 +576,7 @@
 			<div class="f-form">
 				<h3>Send a Message</h3>
 				<h4>Get in touch directly</h4>
-				<p>Have a question, feedback, or collaboration idea? I'd love to hear from you.</p>
+				<p>Have a question, feedback, or a collaboration idea? I'd love to hear from you.</p>
 				<form id="contact-form" class="cf">
 					<input type="text" name="name" required placeholder="Your name" aria-label="Your name">
 					<input type="email" name="email" required placeholder="Your email" aria-label="Your email">
@@ -361,15 +586,15 @@
 			</div>
 			<div class="f-links">
 				<h3>Find Me On</h3>
-				<a href="https://x.com/Mehmetzel186826" target="_blank" class="f-link"><h5>Twitter / X</h5><p>@Mehmetzel186826 - Follow for NeurIQ updates and AI insights</p></a>
-				<a href="https://www.instagram.com/mehmt_ozell/" target="_blank" class="f-link"><h5>Instagram</h5><p>@mehmt_ozell - Behind the scenes and project updates</p></a>
-				<a href="https://www.linkedin.com/in/mehmet-ozel-695227300/" target="_blank" class="f-link"><h5>LinkedIn</h5><p>Mehmet Ozel - Connect for professional opportunities</p></a>
+				<a href="https://x.com/Mehmetzel186826" target="_blank" rel="noopener" class="f-link"><h5>Twitter / X</h5><p>@Mehmetzel186826 — Follow for NeurIQ updates and AI insights</p></a>
+				<a href="https://www.instagram.com/mehmt_ozell/" target="_blank" rel="noopener" class="f-link"><h5>Instagram</h5><p>@mehmt_ozell — Behind the scenes and project updates</p></a>
+				<a href="https://www.linkedin.com/in/mehmet-ozel-695227300/" target="_blank" rel="noopener" class="f-link"><h5>LinkedIn</h5><p>Mehmet Ozel — Connect for professional opportunities</p></a>
 			</div>
 		</div>
 		<div class="f-bottom">
 			<div class="brand">NeurIQ<span>AI that adapts to how YOU learn.</span></div>
 			<div class="f-bottom-links">
-				<a href="#about">About</a><a href="#features">Features</a><a href="#contact">Contact</a>
+				<a href="#pillars">Why NeurIQ</a><a href="#features">Features</a><a href="#about">About</a><a href="#contact">Contact</a>
 			</div>
 		</div>
 	</div>
@@ -385,9 +610,7 @@ function t(key){const d=isTurkish?i18n.tr:i18n.en;return d[key]||i18n.en[key]||"
 async function submitToEmail(form,subject,successKey){const btn=form.querySelector('button[type="submit"]');const orig=btn.textContent.trim();btn.disabled=true;btn.textContent=t("sending");const fd=new FormData(form);fd.append("_subject",subject);fd.append("_captcha","false");fd.append("_replyto",fd.get("email")||"");try{const r=await fetch(FORM_ENDPOINT,{method:"POST",body:fd,headers:{"Accept":"application/json"}});if(!r.ok)throw new Error("err");form.reset();alert(t(successKey));}catch(e){alert(t("error"));}finally{btn.disabled=false;btn.textContent=orig;}}
 document.getElementById("waitlist-form").addEventListener("submit",function(e){e.preventDefault();submitToEmail(this,"NeurIQ Waitlist Signup","waitlistSuccess");});
 document.getElementById("contact-form").addEventListener("submit",function(e){e.preventDefault();submitToEmail(this,"NeurIQ Contact Message","contactSuccess");});
-
 function switchTab(tabId,btnEl){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById(tabId).classList.add('active');if(btnEl)btnEl.classList.add('active');}
-
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
 document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
 </script>
