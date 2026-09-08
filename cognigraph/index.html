@@ -1,292 +1,281 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>CogniGraph | Brain Activity Simulation & 3D Visualization</title>
-	<meta name="description" content="CogniGraph — Educational web demo: natural-language scenarios → LLM brain classification → Brian2 SNN → 3D brain visualization.">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-	<style>
-		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#EF4444;--primary-l:#FCA5A5;--accent:#F87171;--red-d:#DC2626;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace;--fm:'Fira Code',monospace}
-		*{margin:0;padding:0;box-sizing:border-box}
-		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-		::selection{background:rgba(239,68,68,0.25);color:#fff}
-
-		/* ── MESH GRADIENT BG ── */
-		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
-		.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:drift 25s ease-in-out infinite alternate}
-		.mb1{width:700px;height:600px;background:rgba(239,68,68,0.06);top:-15%;left:20%;animation-delay:0s}
-		.mb2{width:500px;height:500px;background:rgba(248,113,113,0.04);bottom:5%;right:-5%;animation-delay:-8s}
-		.mb3{width:600px;height:500px;background:rgba(220,38,38,0.03);top:40%;left:-15%;animation-delay:-15s}
-		@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,50px) scale(0.95)}100%{transform:translate(-10px,-40px) scale(1)}}
-
-		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
-			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
-			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
-
-		/* ── NAV ── */
-		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
-		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,0.15),rgba(248,113,113,0.1),transparent)}
-		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
-		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fm);font-weight:700;font-size:1.3rem;color:#fff}
-		.nlogo svg{width:28px;height:28px;color:var(--primary);filter:drop-shadow(0 0 10px rgba(239,68,68,0.4))}
-		.nlinks{display:flex;gap:2.5rem;list-style:none}
-		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
-		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
-		.nlinks a:hover{color:#fff}.nlinks a:hover::after{width:100%}
-		.ncta{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.4rem;font-family:var(--fm);font-size:0.7rem;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:8px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(239,68,68,0.2)}
-		.ncta:hover{box-shadow:0 0 30px rgba(239,68,68,0.3);transform:translateY(-1px)}
-		.ncta svg{width:16px;height:16px}
-
-		/* ── HERO ── */
-		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;perspective:1200px}
-		.hero-inner{max-width:1200px;margin:0 auto;width:100%;text-align:center}
-		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);font-family:var(--fm);font-size:0.65rem;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
-		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
-		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
-		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem}
-		.hero h1 .w{display:block;color:#fff}
-		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--primary-l),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-		.hero-sub{font-family:var(--fh);font-size:1.2rem;color:var(--accent);font-weight:500;margin-bottom:0.75rem;letter-spacing:0.02em}
-		.hero-desc{font-size:1rem;color:var(--text3);max-width:620px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
-		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
-		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:8px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(239,68,68,0.2)}
-		.btn-pri:hover{box-shadow:0 0 40px rgba(239,68,68,0.3);transform:translateY(-2px)}
-		.btn-pri svg{width:16px;height:16px}
-		.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all 0.3s}
-		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
-		.btn-sec svg{width:16px;height:16px}
-
-		/* ── 3D BROWSER MOCKUP ── */
-		.browser-wrap{max-width:1000px;margin:0 auto;position:relative;transform:rotateX(6deg);transform-style:preserve-3d;transition:transform 0.6s ease;perspective:1200px}
-		.browser-wrap:hover{transform:rotateX(2deg)}
-		.browser-wrap::before{content:'';position:absolute;inset:-20px;background:rgba(239,68,68,0.06);filter:blur(60px);border-radius:50%;z-index:-1}
-		.browser-mock{background:var(--s2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(239,68,68,0.04)}
-		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
-		.browser-bar .d{width:10px;height:10px;border-radius:50%}
-		.d-r{background:#F43F5E}.d-y{background:#EAB308}.d-g{background:#22C55E}
-		.browser-body img{width:100%;display:block;opacity:0.9}
-
-		/* ── FEATURES BENTO ── */
-		.features{padding:6rem 3rem;background:var(--s1);position:relative}
-		.features-in{max-width:1200px;margin:0 auto}
-		.sec-tag{display:inline-flex;align-items:center;gap:0.75rem;font-family:var(--fm);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--primary)}
-		.sec-tag::before{content:'//';color:var(--primary)}
-		.sec-title{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
-		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:600px;margin-bottom:3rem;line-height:1.7}
-
-		.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:1.25rem}
-		.bc{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2rem;
-			transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
-		.bc::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;
-			background:linear-gradient(135deg,rgba(239,68,68,0.12),transparent 50%);
-			-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
-		.bc:hover::before{opacity:1}
-		.bc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.3),0 0 30px rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.12)}
-		.bc.c2x2{grid-column:span 2;grid-row:span 2}
-		.bc.c2x1{grid-column:span 2}
-		.bc.c4x1{grid-column:span 4}
-
-		.bc .feat-img{width:100%;height:200px;border-radius:14px;overflow:hidden;margin-bottom:1.25rem;position:relative;border:1px solid var(--border)}
-		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.8;transition:all 0.5s}
-		.bc:hover .feat-img img{opacity:1;transform:scale(1.03)}
-		.bc .feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
-
-		.bc .chip{display:inline-flex;align-items:center;gap:0.35rem;padding:0.2rem 0.5rem;border-radius:4px;font-family:var(--fm);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
-		.chip-r{background:rgba(239,68,68,0.08);color:var(--accent);border:1px solid rgba(239,68,68,0.15)}
-		.chip-s{background:rgba(148,163,184,0.08);color:#94A3B8;border:1px solid rgba(148,163,184,0.15)}
-		.bc h4{font-family:var(--fh);font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:0.35rem}
-		.bc p{font-size:0.85rem;color:var(--text3);line-height:1.65}
-		.bc .icon{width:36px;height:36px;color:var(--primary);opacity:0.4;transition:opacity 0.3s;margin-bottom:auto}
-		.bc:hover .icon{opacity:0.8}
-
-		/* Pipeline flow */
-		.pipeline{display:flex;align-items:center;gap:0.35rem;margin:1.25rem 0;flex-wrap:wrap}
-		.pipe-step{padding:0.3rem 0.6rem;border-radius:6px;font-family:var(--fm);font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;background:rgba(239,68,68,0.06);color:var(--accent);border:1px solid rgba(239,68,68,0.15)}
-		.pipe-arrow{color:var(--text3);font-size:0.65rem}
-
-		/* Full-width feature */
-		.bc.c4x1{padding:0;display:flex;align-items:stretch;min-height:220px}
-		.bc.c4x1 .feat-text{padding:2rem;flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
-		.bc.c4x1 .feat-side{position:absolute;right:0;top:0;width:60%;height:100%;overflow:hidden}
-		.bc.c4x1 .feat-side img{width:100%;height:100%;object-fit:cover;object-position:left top;opacity:0.4;transition:opacity 0.5s}
-		.bc.c4x1:hover .feat-side img{opacity:0.75}
-		.bc.c4x1 .feat-side::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--s1),transparent);z-index:1}
-
-		/* ── CTA SECTION ── */
-		.cta-section{padding:6rem 3rem;text-align:center;background:var(--bg);position:relative}
-		.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:300px;background:radial-gradient(circle,rgba(239,68,68,0.04),transparent);filter:blur(60px);pointer-events:none}
-		.cta-section .icon-big{width:48px;height:48px;color:var(--primary);opacity:0.6;margin:0 auto 1.5rem}
-		.cta-section h3{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:-0.02em}
-		.cta-section>p{color:var(--text3);max-width:550px;margin:0 auto 2rem;font-size:0.95rem;line-height:1.7}
-		.cta-links{display:flex;gap:1.5rem;justify-content:center;align-items:center;flex-wrap:wrap}
-		.cta-links a{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--fm);font-size:0.85rem;color:var(--text3);text-decoration:none;transition:color 0.3s}
-		.cta-links a:hover{color:var(--primary)}
-		.cta-links a svg{width:18px;height:18px}
-
-		/* ── FOOTER ── */
-		.footer{padding:2.5rem 3rem;border-top:1px solid var(--border);background:var(--s1)}
-		.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-		.footer-logo{display:flex;align-items:center;gap:0.5rem;font-family:var(--fm);font-weight:700;color:#fff;font-size:0.9rem}
-		.footer-logo svg{width:18px;height:18px;color:var(--primary)}
-		.footer-copy{font-family:var(--fl);font-size:0.6rem;color:#333}
-
-		.sr{opacity:0;transform:translateY(30px);transition:all 0.7s ease}.sr.v{opacity:1;transform:translateY(0)}
-
-		@media(max-width:1024px){
-			.bento{grid-template-columns:1fr}.bc.c2x2,.bc.c2x1,.bc.c4x1{grid-column:span 1;grid-row:span 1}
-			.bc.c4x1{flex-direction:column}.bc.c4x1 .feat-side{position:relative;width:100%;height:200px}
-			.bc.c4x1 .feat-side::before{background:linear-gradient(to bottom,var(--s1),transparent)}
-			.nlinks{display:none}
-			.pipeline{justify-content:center}
-		}
-	</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CogniGraph v2 — a 3D brain you can look inside</title>
+<meta name="description" content="CogniGraph v2 is a browser-based 3D brain for learning cognitive neuroscience. Replay eight everyday moments region by region, lesion the atlas, run 150 spiking neurons live. No account, no API key needed.">
+<meta name="theme-color" content="#070910">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23070910%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%235ee1d6%27/%3E%3C/svg%3E">
+<link rel="canonical" href="https://madara88645.github.io/landingpages/cognigraph/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CogniGraph">
+<meta property="og:title" content="CogniGraph v2 — a 3D brain you can look inside">
+<meta property="og:description" content="Replay eight everyday moments region by region, knock out a region and see what breaks, run 150 spiking neurons live. Runs in your browser. Built for learning, not diagnosis.">
+<meta property="og:url" content="https://madara88645.github.io/landingpages/cognigraph/">
+<meta property="og:image" content="https://madara88645.github.io/landingpages/assets/cognigraph-v2/social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CogniGraph v2: a translucent 3D brain with its deep structures visible, next to the words A 3D brain you can look inside.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CogniGraph v2 — a 3D brain you can look inside">
+<meta name="twitter:description" content="A browser-based 3D brain for learning cognitive neuroscience. Pathways, atlas with lesions, live spiking neurons, plain-English scenarios and spaced-repetition quizzes.">
+<meta name="twitter:image" content="https://madara88645.github.io/landingpages/assets/cognigraph-v2/social-card.png">
+<meta name="twitter:image:alt" content="CogniGraph v2: a translucent 3D brain with its deep structures visible, next to the words A 3D brain you can look inside.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cognigraph.css">
+<script src="cognigraph.js" defer></script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="mesh-bg"><div class="mesh-blob mb1"></div><div class="mesh-blob mb2"></div><div class="mesh-blob mb3"></div></div>
-<div class="grid-overlay"></div>
+<header class="site-head wrap" id="top">
+  <a class="brand" href="#top" aria-label="CogniGraph, back to top"><span class="dot" aria-hidden="true"></span><span class="name">CogniGraph</span><span class="ver">v2</span></a>
+  <nav class="site-nav" aria-label="Page sections">
+    <a href="#film">Tour</a>
+    <a href="#modes">Five modes</a>
+    <a href="#badges">Badges</a>
+    <a href="#hood">Under the hood</a>
+  </nav>
+  <div class="head-cta">
+    <a class="btn btn-primary btn-small" href="https://cognigraph-tau.vercel.app/">Open the app <span class="arrow" aria-hidden="true">↗</span></a>
+  </div>
+</header>
 
-<!-- NAV -->
-<nav class="nav"><div class="nav-in">
-	<a href="#" class="nlogo">
-		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
-		CogniGraph
-	</a>
-	<ul class="nlinks"><li><a href="#features">Features</a></li><li><a href="#pipeline">Pipeline</a></li><li><a href="https://github.com/madara88645/Cognigraph" target="_blank">GitHub</a></li></ul>
-	<a href="https://cognigraph-tau.vercel.app" target="_blank" class="ncta">
-		<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-		Live Demo
-	</a>
-</div></nav>
+<main id="main">
 
-<!-- HERO -->
-<section class="hero">
-	<div class="hero-inner">
-		<div class="hero-chip"><span class="dot"></span>Educational Neuroscience Demo</div>
-		<h1><span class="w">See Your Brain</span><span class="g">Think in 3D.</span></h1>
-		<p class="hero-sub">Natural language → Brain simulation → 3D visualization.</p>
-		<p class="hero-desc">Describe any real-world scenario. An LLM classifies which brain regions activate, a Brian2 spiking neural network simulates the neural activity, and a Three.js-powered 3D brain model lets you watch it unfold — all in your browser.</p>
-		<div class="hero-btns">
-			<a href="https://cognigraph-tau.vercel.app" target="_blank" class="btn-pri">
-				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-				Try Live Demo
-			</a>
-			<a href="https://github.com/madara88645/Cognigraph" target="_blank" class="btn-sec">
-				<svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg>
-				Source Code
-			</a>
-		</div>
-		<div class="browser-wrap sr">
-			<div class="browser-mock">
-				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
-				<div class="browser-body">
-					<!-- Video Hazır Taslak: Ekran kaydı aldığında bu yorumu kaldırıp `img` satırını silebilirsin -->
-					<!-- <video autoplay muted loop playsinline style="width:100%; display:block; opacity:0.9; object-fit:cover; height:500px;"><source src="../assets/cognigraph_demo.mp4" type="video/mp4"></video> -->
-					<img src="../assets/cognigraph_screenshot.png" alt="CogniGraph Brain Visualization" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop'">
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="hero wrap" aria-labelledby="hero-title">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Cognitive neuroscience, in your browser</p>
+      <h1 id="hero-title">A 3D brain you can <em>look inside.</em></h1>
+      <p class="lede">Replay eight everyday moments region by region. Knock out a region and see what breaks. Run 150 spiking neurons live. Every step says how well it is supported.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://cognigraph-tau.vercel.app/">Open the app <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="btn" href="#film">Watch the 46-second tour</a>
+      </div>
+      <p class="hero-foot"><b>No account. No API key</b> for the core experience.<br>Educational simulation, not medical software.</p>
+    </div>
+    <figure class="hero-visual">
+      <img src="../assets/cognigraph-v2/brain-hero.jpg" width="1600" height="1408" alt="The CogniGraph brain: a translucent grey cortex with the thalamus, hippocampus, amygdala and basal ganglia visible inside in purple, orange and red, and the cerebellum behind." fetchpriority="high">
+      <figcaption>Procedural geometry, rendered live in WebGL</figcaption>
+    </figure>
+  </div>
+
+  <div class="replay" aria-labelledby="replay-title">
+    <div class="replay-head">
+      <p class="eyebrow" id="replay-title">Replay · Recognizing a face</p>
+      <button class="btn btn-small" id="replay-toggle" type="button" hidden>Pause replay</button>
+      <p class="replay-clock" aria-live="off">t = <b id="replay-ms">0</b> ms</p>
+    </div>
+    <div class="replay-track">
+      <ol class="replay-steps" id="replay-steps">
+        <li class="step" data-ms="55">
+          <div class="ms"><span>Step 1</span><b>~55 ms</b></div>
+          <div class="region">V1<small>primary visual cortex</small></div>
+          <p class="what">Edges, contrast and orientation are pulled out of the image.</p>
+          <p class="what"><span class="badge human">Human recording</span></p>
+        </li>
+        <li class="step" data-ms="95">
+          <div class="ms"><span>Step 2</span><b>~95 ms</b></div>
+          <div class="region">V4<small>ventral stream</small></div>
+          <p class="what">Colour and mid-level shape lift the face off the background.</p>
+          <p class="what"><span class="badge animal">Animal model</span></p>
+        </li>
+        <li class="step" data-ms="170">
+          <div class="ms"><span>Step 3</span><b>~170 ms</b></div>
+          <div class="region">FFA<small>fusiform face area</small></div>
+          <p class="what">The face is encoded as a whole, apart from other objects.</p>
+          <p class="what"><span class="badge human">Human recording</span></p>
+        </li>
+        <li class="step" data-ms="300">
+          <div class="ms"><span>Step 4</span><b>~300 ms</b></div>
+          <div class="region">Hippocampus + amygdala</div>
+          <p class="what">The face is matched to a person and to how you feel about them.</p>
+          <p class="what"><span class="badge estimate">Estimate</span></p>
+        </li>
+        <li class="step" data-ms="400">
+          <div class="ms"><span>Step 5</span><b>~400 ms</b></div>
+          <div class="region">vmPFC / OFC + dlPFC</div>
+          <p class="what">You decide what to do about it.</p>
+          <p class="what"><span class="badge estimate">Estimate</span></p>
+        </li>
+      </ol>
+    </div>
+    <p class="replay-note">One of the eight pathways, with the app's own timings and evidence badges. Millisecond values are group averages from the literature, not measurements of anyone in particular.</p>
+  </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="features">
-	<div class="features-in">
-		<div class="sec-tag">Under the Hood</div>
-		<h2 class="sec-title">From Words to Neural Spikes.</h2>
-		<p class="sec-desc">A multi-stage pipeline that transforms a sentence into a biologically-inspired spiking simulation, rendered in real time on a 3D brain model.</p>
-
-		<div class="bento">
-			<!-- 3D Brain Visualization (2x2) -->
-			<div class="bc c2x2 sr">
-				<div class="feat-img"><img src="../assets/cognigraph_screenshot.png" alt="3D Brain Visualization" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
-				<div class="chip chip-r"><svg style="width:10px;height:10px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> Visualization</div>
-				<h4>3D Brain Model</h4>
-				<p>Interactive Three.js brain mesh with real-time glow, bloom rendering, and per-lobe coloring. Spike counters, HPA context, and event logs update live during playback.</p>
-			</div>
-
-			<!-- LLM Classification (2x1) -->
-			<div class="bc c2x1 sr">
-				<div class="chip chip-r"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:2px"></span> LLM</div>
-				<h4>Brain Lobe Classification</h4>
-				<p>An OpenRouter-backed LLM analyses your natural-language scenario and classifies which brain lobe activates, the dominant neuromodulator, its intensity, and the scientific rationale — all in a single structured response.</p>
-			</div>
-
-			<!-- Brian2 SNN -->
-			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-				<h4>Brian2 SNN</h4>
-				<p>Biologically realistic spiking neural network engine. Per-lobe spike indices and timing for scientifically grounded simulation.</p>
-			</div>
-
-			<!-- Neuromodulator System -->
-			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-				<h4>Neuromodulator Engine</h4>
-				<p>Dopamine, serotonin, cortisol — modeled as simulation metaphors. HPA axis context visualized live.</p>
-			</div>
-
-			<!-- Full Pipeline (full-width) -->
-			<div class="bc c4x1 sr" id="pipeline">
-				<div class="feat-text">
-					<div class="chip chip-s"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#94A3B8;margin-right:2px"></span> Architecture</div>
-					<h4>End-to-End Pipeline</h4>
-					<p>From a single sentence to a complete brain simulation and 3D visualization — fully automated, fully real-time.</p>
-					<div class="pipeline">
-						<span class="pipe-step">User Scenario</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">FastAPI</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">LLM Classify</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">Neuromod</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">Brian2 SNN</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">VFX Profile</span><span class="pipe-arrow">→</span>
-						<span class="pipe-step">Three.js 3D</span>
-					</div>
-				</div>
-				<div class="feat-side"><img src="../assets/cognigraph_banner.png" alt="Pipeline Architecture" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
-			</div>
-		</div>
-	</div>
+<section class="section" id="film" aria-labelledby="film-title">
+  <div class="wrap">
+    <div class="section-head rv">
+      <div><p class="eyebrow">The tour</p><h2 id="film-title">Forty-six seconds, no sound.</h2></div>
+      <p class="lede">Pathways, Atlas, Neurons, Scenario and Learn, in the order you meet them in the app.</p>
+    </div>
+    <figure class="film-frame rv">
+      <video id="tour" controls muted playsinline preload="metadata" poster="../assets/cognigraph-v2/video-poster.jpg" aria-label="CogniGraph v2 tour: the 3D brain, a pathway replay with evidence badges, the atlas lesion mode, live spiking neurons, a plain-English scenario and the quiz.">
+        <source src="../assets/cognigraph-v2/cognigraph-v2-intro-silent.mp4" type="video/mp4">
+        Your browser cannot play this video. <a href="https://cognigraph-tau.vercel.app/">Open the app instead.</a>
+      </video>
+    </figure>
+    <div class="film-bar rv"><span><b>Silent</b> by design. Nothing plays until you press play.</span><span>1080p · 46 s · captured from the live app</span></div>
+  </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-section">
-	<svg class="icon-big" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="1.5"></circle><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16v-4M12 8h.01"></path></svg>
-	<h3>Built to Teach, Not to Diagnose.</h3>
-	<p>CogniGraph is a pure educational demo. Outputs are for visualization and learning — not diagnosis or treatment. The modeled neuromodulators and stress-hormone axes serve as simulation metaphors, not clinical measurements. Live on Fly.io + Vercel.</p>
-	<div class="cta-links">
-		<a href="https://cognigraph-tau.vercel.app" target="_blank">
-			<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-			Vercel (UI)
-		</a>
-		<a href="https://cognigraph-13906.fly.dev" target="_blank">
-			<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/></svg>
-			Fly.io (Backend)
-		</a>
-		<a href="https://github.com/madara88645/Cognigraph" target="_blank">
-			<svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg>
-			Source Code
-		</a>
-		<a href="../">
-			<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-			Portfolio
-		</a>
-	</div>
+<section class="section" id="modes" aria-labelledby="modes-title">
+  <div class="wrap">
+    <div class="section-head rv">
+      <div><p class="eyebrow">Five ways in</p><h2 id="modes-title">Pick a moment. Or a region. Or a single neuron.</h2></div>
+      <p class="lede">The same brain, five modes. Each one is a different question you can ask it.</p>
+    </div>
+    <div class="modes">
+      <ol class="mode-index" aria-label="Modes">
+        <li><a href="#m-pathways" style="--c:var(--pathways)"><span class="k" aria-hidden="true"></span>Pathways<span class="n">1</span></a></li>
+        <li><a href="#m-atlas" style="--c:var(--atlas)"><span class="k" aria-hidden="true"></span>Atlas<span class="n">2</span></a></li>
+        <li><a href="#m-neurons" style="--c:var(--neurons)"><span class="k" aria-hidden="true"></span>Neurons<span class="n">3</span></a></li>
+        <li><a href="#m-scenario" style="--c:var(--scenario)"><span class="k" aria-hidden="true"></span>Scenario<span class="n">4</span></a></li>
+        <li><a href="#m-learn" style="--c:var(--learn)"><span class="k" aria-hidden="true"></span>Learn<span class="n">5</span></a></li>
+      </ol>
+
+      <div class="mode-list">
+        <article class="mode rv" id="m-pathways" style="--c:var(--pathways)">
+          <div class="mode-shot"><img src="../assets/cognigraph-v2/pathway-playing.jpg" width="1920" height="1080" loading="lazy" alt="Pathways mode: the brain with the fusiform face area lit in teal, a timeline at the bottom and a step card reading Step 3 of 5, FFA, about 170 ms, tagged Human recording."></div>
+          <div class="mode-copy">
+            <div>
+              <p class="mode-tag">Pathways</p>
+              <h3>Eight everyday moments, replayed hub by hub.</h3>
+              <p>Recognising a face, recalling a word, a fear response, making a decision, reading a sentence, learning a motor skill, shifting attention, sleep consolidation. Each step opens with one sentence, the reasoning and the evidence behind it. Motor learning and sleep consolidation unfold over much longer timescales and are marked schematic.</p>
+              <p>There is also a 24-trial Stroop task, about a minute long, so you can put your own reaction time next to the timeline. It runs and stays on your device.</p>
+            </div>
+            <div class="try"><span class="l">Try</span><p>Press space to play. Click a timeline marker to jump to that step.</p></div>
+          </div>
+        </article>
+
+        <article class="mode rv" id="m-atlas" style="--c:var(--atlas)">
+          <div class="mode-shot"><img src="../assets/cognigraph-v2/atlas-lesion.jpg" width="1920" height="1080" loading="lazy" alt="Atlas mode with lesion mode on: the region list grouped by lobe, two regions marked lesioned, and a card titled Lesion: Hippocampus describing anterograde amnesia."></div>
+          <div class="mode-copy">
+            <div>
+              <p class="mode-tag">Atlas</p>
+              <h3>28 regions, and what breaks without them.</h3>
+              <p>Thirteen cortical patches and fifteen modelled structures: what each does, what it connects to, and the famous cases. Turn on lesion mode, knock a region out, then go back to a pathway and watch the steps that needed it get marked broken.</p>
+            </div>
+            <div class="try"><span class="l">Try</span><p>Lesion the hippocampus, then replay <em>Recalling a word or name.</em></p></div>
+          </div>
+        </article>
+
+        <article class="mode rv" id="m-neurons" style="--c:var(--neurons)">
+          <div class="mode-shot"><img src="../assets/cognigraph-v2/neurons.jpg" width="1920" height="1080" loading="lazy" alt="Neurons mode: a spike raster and membrane-voltage traces in amber, cell-type and drive controls on the left, and a card explaining the GABA tone slider, tagged Direct mechanism."></div>
+          <div class="mode-copy">
+            <div>
+              <p class="mode-tag">Neurons</p>
+              <h3>150 spiking neurons, live.</h3>
+              <p>An Izhikevich point-neuron network: regular-spiking excitatory cells and fast-spiking inhibitory cells, with the raster and membrane traces on screen as it runs. Six neuromodulator sliders each say exactly what they change in the model and how well that mapping is supported. It is a toy network, not a brain, and the panel says so.</p>
+            </div>
+            <div class="try"><span class="l">Try</span><p>Drag a slider. The badge next to it tells you how literal that knob is.</p></div>
+          </div>
+        </article>
+
+        <article class="mode rv" id="m-scenario" style="--c:var(--scenario)">
+          <div class="mode-shot"><img src="../assets/cognigraph-v2/scenario-result.jpg" width="1920" height="1080" loading="lazy" alt="Scenario mode: the sentence Walking onto the stage, a thousand faces looking at me, a result card titled A general cortical response with five timed steps, a neuromodulator profile, and a note that this is keyword matching, not understanding."></div>
+          <div class="mode-copy">
+            <div>
+              <p class="mode-tag">Scenario</p>
+              <h3>Describe a moment. Get a plausible replay.</h3>
+              <p>Type a situation in plain English. Without a key, a local word-matching heuristic picks the nearest built-in pathway and labels the result as plausible, not proven. With your own OpenRouter key, a language model composes the sequence instead. Either way you can replay it on the brain and send its profile to the neurons.</p>
+            </div>
+            <div class="try"><span class="l">Try</span><p><em>“Walking onto the stage, a thousand faces looking at me.”</em></p></div>
+          </div>
+        </article>
+
+        <article class="mode rv" id="m-learn" style="--c:var(--learn)">
+          <div class="mode-shot"><img src="../assets/cognigraph-v2/learn.jpg" width="1920" height="1080" loading="lazy" alt="Learn mode: 128 questions ready, three Leitner boxes, and a question card asking Which region does this? with Primary Visual Cortex marked correct and the region glowing green on the brain."></div>
+          <div class="mode-copy">
+            <div>
+              <p class="mode-tag">Learn</p>
+              <h3>Quiz yourself. Missed items come back.</h3>
+              <p>Questions are built from the regions, pathways and glossary you have been reading. A right answer moves an item up a box; a wrong one sends it back to box one, and it returns sooner. Progress stays in this browser.</p>
+            </div>
+            <div class="try"><span class="l">Try</span><p>Answer, then press Enter for the next question.</p></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer"><div class="footer-in">
-	<div class="footer-logo">
-		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
-		CogniGraph
-	</div>
-	<div class="footer-copy">© 2026 Mehmet Özel. MIT License.</div>
-</div></footer>
+<section class="section" id="badges" aria-labelledby="badges-title">
+  <div class="wrap honesty">
+    <div class="rv">
+      <p class="eyebrow">What the badges mean</p>
+      <h2 id="badges-title">Labels, not promises.</h2>
+      <p class="lede" style="margin-top:18px">Evidence badges distinguish recordings, estimates, simplified mechanisms and metaphors. They explain how to interpret the model, not guarantee its accuracy.</p>
+      <div class="quiet"><b>What this is not.</b> Regions are simplified hubs, not the whole story. Positions are proportional, not atlas coordinates. Colours are chosen to be told apart, not to look real. CogniGraph teaches; it does not diagnose, treat, or measure your brain.</div>
+    </div>
+    <div class="badge-groups rv">
+      <div class="badge-group">
+        <p class="l">On each pathway step · where the timing comes from</p>
+        <div class="badge-row">
+          <div><span class="badge human">Human recording</span><span>Measured in people, for example an EEG component such as the N170 for faces.</span></div>
+          <div><span class="badge animal">Animal model</span><span>Timed in animal recordings; the human latency is inferred, not measured.</span></div>
+          <div><span class="badge estimate">Estimate</span><span>A reasoned guess with no direct measurement behind it. Treat the number as a placeholder.</span></div>
+        </div>
+      </div>
+      <div class="badge-group">
+        <p class="l">On each slider and explanation · how literal the model is</p>
+        <div class="badge-row">
+          <div><span class="badge direct">Direct mechanism</span><span>The knob does what the real thing does, for example GABA tone scaling inhibitory weights.</span></div>
+          <div><span class="badge ok">Well supported</span><span>The effect is documented, even if the model is a simplification of it.</span></div>
+          <div><span class="badge simplified">Simplified</span><span>Real, but reduced to one line. Dopamine here is a knob, not a reward or learning loop.</span></div>
+          <div><span class="badge metaphor">Metaphor</span><span>Illustrative only. Cortisol as a stress dial is the weakest mapping in the set, and says so.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<script>
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
-document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
-</script>
+<section class="section" id="hood" aria-labelledby="hood-title">
+  <div class="wrap hood">
+    <div class="rv">
+      <p class="eyebrow">Under the hood</p>
+      <h2 id="hood-title">One HTML file. No server.</h2>
+      <ul class="spec" style="margin-top:32px">
+        <li><span class="k">Build</span><span class="v">Source lives in small JavaScript modules. A dependency-free Python script concatenates them into a single <b>dist/index.html</b>, served as static files on Vercel.</span></li>
+        <li><span class="k">Rendering</span><span class="v"><b>Three.js</b> over WebGL. The brain is procedural geometry generated in code, not a scanned or downloaded model.</span></li>
+        <li><span class="k">Neurons</span><span class="v">150 <b>Izhikevich</b> point neurons integrated in the browser, with the raster and rate plots drawn every frame.</span></li>
+        <li><span class="k">AI, optional</span><span class="v">Bring your own <b>OpenRouter</b> key, stored only in your browser, to unlock AI-composed scenarios and Ask. Ask answers from the app's own records and checks that its citations point at real source entries. It does not verify whether a claim is true.</span></li>
+        <li><span class="k">Needs</span><span class="v">A browser with WebGL and an internet connection for Three.js and fonts, which load from CDNs.</span></li>
+      </ul>
+    </div>
+    <aside class="devnote rv" aria-labelledby="devnote-title">
+      <p class="l">From v1 to v2</p>
+      <h3 id="devnote-title">Same name, new brain.</h3>
+      <p>v1 was a demo with a server behind it: a Python API, a spiking-network backend, and a ready-made brain mesh I found and dropped in by hand.</p>
+      <p>v2 is a rewrite that runs entirely in the browser. This time an AI coding agent, Claude Fable 5.1, wrote the procedural brain geometry from a description, rather than importing a ready-made brain mesh. I used AI coding agents throughout the rebuild and reviewed the results against the educational scope.</p>
+      <img src="../assets/cognigraph-v2/brain-deep.jpg" width="1600" height="1408" loading="lazy" alt="The brain with the cortex faded almost to glass, exposing the corpus callosum, thalamus, hippocampus, amygdala, basal ganglia and brainstem in colour.">
+    </aside>
+  </div>
+</section>
+
+<section class="section cta" aria-labelledby="cta-title">
+  <div class="wrap rv">
+    <p class="eyebrow" style="justify-content:center">Try it</p>
+    <h2 id="cta-title">Open it. Press space.</h2>
+    <p class="lede">No sign-up, no key, nothing to install. If you know where it is wrong, the source is open and I would like to hear it.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://cognigraph-tau.vercel.app/">Open the app <span class="arrow" aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://github.com/madara88645/Cognigraph">Source on GitHub <span class="arrow" aria-hidden="true">↗</span></a>
+    </div>
+    <p class="links"><span>cognigraph-tau.vercel.app</span><span>MIT licence</span><span>Three.js r170</span></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot wrap">
+  <span>CogniGraph is a project by <a href="../">Mehmet Özel</a>, AI &amp; Data Science, Bournemouth University.</span>
+  <span><a href="https://github.com/madara88645/Cognigraph">GitHub</a> · <a href="https://cognigraph-tau.vercel.app/">Live app</a> · <a href="../">All projects</a></span>
+</footer>
 </body>
 </html>
