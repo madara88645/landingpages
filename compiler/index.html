@@ -1,260 +1,77 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Compiler | Optimize Prompts, Slash Token Costs</title>
-	<meta name="description" content="Compiler — A prompt optimization engine built to slash LLM token costs without degrading output quality.">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-	<style>
-		:root{--bg:#08080C;--s1:#0F0F14;--s2:#16161D;--s3:#1E1E28;--glass:rgba(22,22,29,0.55);--primary:#3B82F6;--primary-l:#93C5FD;--accent:#60A5FA;--rose:#F43F5E;--text:#EAEAEF;--text2:#9090A5;--text3:#55556A;--border:rgba(255,255,255,0.04);--fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--fl:'Space Grotesk',monospace;--fm:'Fira Code',monospace}
-		*{margin:0;padding:0;box-sizing:border-box}
-		body{background:var(--bg);color:var(--text2);font-family:var(--fb);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-		::selection{background:rgba(59,130,246,0.25);color:#fff}
-
-		/* ── MESH GRADIENT BG ── */
-		.mesh-bg{position:fixed;inset:0;z-index:-10;pointer-events:none;overflow:hidden}
-		.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);animation:drift 25s ease-in-out infinite alternate}
-		.mb1{width:700px;height:600px;background:rgba(59,130,246,0.07);top:-15%;left:20%;animation-delay:0s}
-		.mb2{width:500px;height:500px;background:rgba(96,165,250,0.04);bottom:5%;right:-5%;animation-delay:-8s}
-		.mb3{width:600px;height:500px;background:rgba(59,130,246,0.04);top:40%;left:-15%;animation-delay:-15s}
-		@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,50px) scale(0.95)}100%{transform:translate(-10px,-40px) scale(1)}}
-
-		.grid-overlay{position:fixed;inset:0;z-index:-8;pointer-events:none;
-			background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
-			background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
-
-		/* ── NAV ── */
-		.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(8,8,12,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
-		.nav::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.15),rgba(96,165,250,0.1),transparent)}
-		.nav-in{max-width:1200px;margin:0 auto;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between}
-		.nlogo{display:flex;align-items:center;gap:0.7rem;text-decoration:none;font-family:var(--fm);font-weight:700;font-size:1.3rem;color:#fff}
-		.nlogo svg{width:28px;height:28px;color:var(--primary);filter:drop-shadow(0 0 10px rgba(59,130,246,0.4))}
-		.nlinks{display:flex;gap:2.5rem;list-style:none}
-		.nlinks a{text-decoration:none;font-family:var(--fl);font-size:0.7rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;transition:color 0.3s;position:relative}
-		.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;border-radius:1px;background:var(--primary);transition:width 0.3s}
-		.nlinks a:hover{color:#fff}.nlinks a:hover::after{width:100%}
-		.ncta{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.4rem;font-family:var(--fm);font-size:0.7rem;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:8px;text-decoration:none;transition:all 0.3s;box-shadow:0 0 20px rgba(59,130,246,0.2)}
-		.ncta:hover{box-shadow:0 0 30px rgba(59,130,246,0.3);transform:translateY(-1px)}
-		.ncta svg{width:16px;height:16px}
-
-		/* ── HERO ── */
-		.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;perspective:1200px}
-		.hero-inner{max-width:1200px;margin:0 auto;width:100%;text-align:center}
-		.hero-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.12);font-family:var(--fm);font-size:0.65rem;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2rem}
-		.hero-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);animation:pulse 2s infinite}
-		@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
-		.hero h1{font-family:var(--fh);font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1rem}
-		.hero h1 .w{display:block;color:#fff}
-		.hero h1 .g{display:block;background:linear-gradient(135deg,var(--accent),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-		.hero-sub{font-family:var(--fh);font-size:1.2rem;color:var(--accent);font-weight:500;margin-bottom:0.75rem;letter-spacing:0.02em}
-		.hero-desc{font-size:1rem;color:var(--text3);max-width:620px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
-		.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
-		.btn-pri{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:8px;text-decoration:none;transition:all 0.4s;box-shadow:0 0 25px rgba(59,130,246,0.2)}
-		.btn-pri:hover{box-shadow:0 0 40px rgba(59,130,246,0.3);transform:translateY(-2px)}
-		.btn-pri svg{width:16px;height:16px}
-		.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;font-family:var(--fm);font-size:0.8rem;font-weight:500;color:#fff;background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all 0.3s}
-		.btn-sec:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
-		.btn-sec svg{width:16px;height:16px}
-
-		/* ── 3D BROWSER MOCKUP ── */
-		.browser-wrap{max-width:1000px;margin:0 auto;position:relative;transform:rotateX(6deg);transform-style:preserve-3d;transition:transform 0.6s ease;perspective:1200px}
-		.browser-wrap:hover{transform:rotateX(2deg)}
-		.browser-wrap::before{content:'';position:absolute;inset:-20px;background:rgba(59,130,246,0.08);filter:blur(60px);border-radius:50%;z-index:-1}
-		.browser-mock{background:var(--s2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(59,130,246,0.05)}
-		.browser-bar{height:36px;background:var(--s3);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--border)}
-		.browser-bar .d{width:10px;height:10px;border-radius:50%}
-		.d-r{background:#F43F5E}.d-y{background:#EAB308}.d-g{background:#22C55E}
-		.browser-body img{width:100%;display:block;opacity:0.9}
-
-		/* ── FEATURES BENTO ── */
-		.features{padding:6rem 3rem;background:var(--s1);position:relative}
-		.features-in{max-width:1200px;margin:0 auto}
-		.sec-tag{display:inline-flex;align-items:center;gap:0.75rem;font-family:var(--fm);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;color:var(--primary)}
-		.sec-tag::before{content:'//';color:var(--primary)}
-		.sec-title{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;margin-bottom:0.5rem;letter-spacing:-0.02em}
-		.sec-desc{font-size:0.92rem;color:var(--text3);max-width:600px;margin-bottom:3rem;line-height:1.7}
-
-		.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto auto;gap:1.25rem}
-		.bc{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:2rem;
-			transition:all 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
-		.bc::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;
-			background:linear-gradient(135deg,rgba(59,130,246,0.12),transparent 50%);
-			-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0;transition:opacity 0.4s}
-		.bc:hover::before{opacity:1}
-		.bc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.3),0 0 30px rgba(59,130,246,0.05);border-color:rgba(59,130,246,0.12)}
-		.bc.c2x2{grid-column:span 2;grid-row:span 2}
-		.bc.c2x1{grid-column:span 2}
-		.bc.c4x1{grid-column:span 4}
-
-		.bc .feat-img{width:100%;height:200px;border-radius:14px;overflow:hidden;margin-bottom:1.25rem;position:relative;border:1px solid var(--border)}
-		.bc .feat-img img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:0.8;transition:all 0.5s}
-		.bc:hover .feat-img img{opacity:1;transform:scale(1.03)}
-		.bc .feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(22,22,29,0.8),transparent 50%)}
-
-		.bc .chip{display:inline-flex;align-items:center;gap:0.35rem;padding:0.2rem 0.5rem;border-radius:4px;font-family:var(--fm);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
-		.chip-g{background:rgba(34,197,94,0.08);color:#4ADE80;border:1px solid rgba(34,197,94,0.15)}
-		.chip-s{background:rgba(148,163,184,0.08);color:#94A3B8;border:1px solid rgba(148,163,184,0.15)}
-		.bc h4{font-family:var(--fh);font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:0.35rem}
-		.bc p{font-size:0.85rem;color:var(--text3);line-height:1.65}
-		.bc .icon{width:36px;height:36px;color:var(--primary);opacity:0.4;transition:opacity 0.3s;margin-bottom:auto}
-		.bc:hover .icon{opacity:0.8}
-
-		/* Full-width feature with side image */
-		.bc.c4x1{padding:0;display:flex;align-items:stretch;min-height:220px}
-		.bc.c4x1 .feat-text{padding:2rem;flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
-		.bc.c4x1 .feat-side{position:absolute;right:0;top:0;width:60%;height:100%;overflow:hidden}
-		.bc.c4x1 .feat-side img{width:100%;height:100%;object-fit:cover;object-position:left top;opacity:0.4;transition:opacity 0.5s}
-		.bc.c4x1:hover .feat-side img{opacity:0.75}
-		.bc.c4x1 .feat-side::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--s1),transparent);z-index:1}
-
-		/* ── CTA SECTION ── */
-		.cta-section{padding:6rem 3rem;text-align:center;background:var(--bg);position:relative}
-		.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:300px;background:radial-gradient(circle,rgba(59,130,246,0.04),transparent);filter:blur(60px);pointer-events:none}
-		.cta-section .icon-big{width:48px;height:48px;color:var(--primary);opacity:0.6;margin:0 auto 1.5rem}
-		.cta-section h3{font-family:var(--fh);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:-0.02em}
-		.cta-section>p{color:var(--text3);max-width:550px;margin:0 auto 2rem;font-size:0.95rem;line-height:1.7}
-		.cta-links{display:flex;gap:1.5rem;justify-content:center;align-items:center}
-		.cta-links a{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--fm);font-size:0.85rem;color:var(--text3);text-decoration:none;transition:color 0.3s}
-		.cta-links a:hover{color:var(--primary)}
-		.cta-links a svg{width:18px;height:18px}
-
-		/* ── FOOTER ── */
-		.footer{padding:2.5rem 3rem;border-top:1px solid var(--border);background:var(--s1)}
-		.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-		.footer-logo{display:flex;align-items:center;gap:0.5rem;font-family:var(--fm);font-weight:700;color:#fff;font-size:0.9rem}
-		.footer-logo svg{width:18px;height:18px;color:var(--primary)}
-		.footer-copy{font-family:var(--fl);font-size:0.6rem;color:#333}
-
-		.sr{opacity:0;transform:translateY(30px);transition:all 0.7s ease}.sr.v{opacity:1;transform:translateY(0)}
-
-		@media(max-width:1024px){
-			.bento{grid-template-columns:1fr}.bc.c2x2,.bc.c2x1,.bc.c4x1{grid-column:span 1;grid-row:span 1}
-			.bc.c4x1{flex-direction:column}.bc.c4x1 .feat-side{position:relative;width:100%;height:200px}
-			.bc.c4x1 .feat-side::before{background:linear-gradient(to bottom,var(--s1),transparent)}
-			.nlinks{display:none}
-		}
-	</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Compiler case study — Mehmet Özel</title>
+<meta name="description" content="Prompt Compiler turns a rough request into a structured prompt, an execution plan and a policy check, with an offline, deterministic core. PR Safety adds an advisory merge verdict. A case study by Mehmet Özel.">
+<meta name="theme-color" content="#0c0e13">
+<link rel="icon" href="../assets/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="canonical" href="https://mehmetozel.com/compiler/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prompt Compiler case study — Mehmet Özel">
+<meta property="og:description" content="From a rough request to a plan you can check: structured prompts, execution plans and policy checks, with an offline core.">
+<meta property="og:url" content="https://mehmetozel.com/compiler/">
+<meta property="og:image" content="https://mehmetozel.com/assets/compiler/compiler-tour-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/portfolio.css">
+<link rel="stylesheet" href="../styles/refined.css">
+<link rel="stylesheet" href="../styles/motion.css">
+<link rel="stylesheet" href="../styles/pages.css">
+<script src="../scripts/portfolio.js" defer></script>
 </head>
-<body>
+<body class="sub-page case-page">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header wrap"><a class="wordmark" href="../" aria-label="Mehmet Özel, portfolio home"><img class="avatar" src="../assets/userprofilepicture.png" alt="" width="32" height="32">MÖzel.</a><nav aria-label="Main navigation"><a href="../#research">Research</a><a href="../#products" aria-current="page">Products</a><a href="../#tools">Tools</a><a href="../#experience">Experience</a></nav><div class="header-actions"><a class="cv-chip" href="../cv/">CV</a><a class="header-link" href="https://prcompiler.com">Open Prompt Compiler <span aria-hidden="true">↗</span></a></div></header>
+<main id="main">
+<section class="case-hero wrap" aria-labelledby="case-title">
+<p class="intro">Prompt Compiler · case study</p>
+<h1 id="case-title">From a rough request to a plan you can check.</h1>
+<p class="hero-desc">Prompt Compiler turns a vague request into a structured prompt, a step-by-step execution plan and a policy check. Its core runs offline and gives the same result every time. A companion tool, PR Safety, gives an advisory verdict on a pull request before you merge it.</p>
+<div class="hero-actions"><a class="button" href="https://prcompiler.com">Open Prompt Compiler <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/madara88645/Compiler">Source code <span aria-hidden="true">↗</span></a><a class="text-link" href="https://chromewebstore.google.com/detail/prompt-compiler-intercept/jnnjjcmfabmanpjkjfmfhnhjinbalgfd">Chrome extension <span aria-hidden="true">↗</span></a></div>
+<ul class="hero-meta" aria-label="Project facts"><li>Personal project, open source (Apache-2.0)</li><li>Core works offline, no API key</li><li>Live at prcompiler.com</li></ul>
+</section>
+<figure class="case-shot wrap"><video controls muted playsinline preload="metadata" poster="../assets/compiler/compiler-tour-poster.jpg" width="960" height="540" aria-label="Animated tour: a request is compiled into an expanded prompt, an execution plan and a readiness check, then PR Safety suggests splitting a pull request"><source src="../assets/compiler/compiler-tour.mp4" type="video/mp4">Your browser does not support video. <a href="../assets/compiler/compiler-tour.mp4">Download the tour</a>.</video><figcaption><span>15-second animated tour from the project README. Silent.</span><span>Compile a request, then check a pull request.</span></figcaption></figure>
 
-<div class="mesh-bg"><div class="mesh-blob mb1"></div><div class="mesh-blob mb2"></div><div class="mesh-blob mb3"></div></div>
-<div class="grid-overlay"></div>
-
-<!-- NAV -->
-<nav class="nav"><div class="nav-in">
-	<a href="#" class="nlogo">
-		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-		Compiler
-	</a>
-	<ul class="nlinks"><li><a href="#features">Features</a></li><li><a href="#about">About</a></li><li><a href="https://github.com/madara88645/Compiler" target="_blank">GitHub</a></li></ul>
-	<a href="https://github.com/madara88645/Compiler" target="_blank" class="ncta">
-		<svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg>
-		View Code
-	</a>
-</div></nav>
-
-<!-- HERO -->
-<section class="hero">
-	<div class="hero-inner">
-		<div class="hero-chip"><span class="dot"></span>v1.0 is Live</div>
-		<h1><span class="w">Optimize Prompts.</span><span class="g">Slash Token Costs.</span></h1>
-		<p class="hero-sub">The ultimate compiler for LLM interactions.</p>
-		<p class="hero-desc">Stop wasting tokens on verbose prompts. Compiler uses advanced heuristics and AI to compress your context, manage RAG pipelines locally, and integrate directly into your workflow.</p>
-		<div class="hero-btns">
-			<a href="https://compiler-git-main-madara88645s-projects.vercel.app/" target="_blank" class="btn-pri">
-				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-				Open Web App
-			</a>
-			<a href="https://chromewebstore.google.com/detail/jnnjjcmfabmanpjkjfmfhnhjinbalgfd?utm_source=item-share-cb" target="_blank" class="btn-sec">
-				<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
-				Chrome Extension
-			</a>
-		</div>
-		<div class="browser-wrap sr">
-			<div class="browser-mock">
-				<div class="browser-bar"><div class="d d-r"></div><div class="d d-y"></div><div class="d d-g"></div></div>
-				<div class="browser-body"><img src="../assets/PCcover.png" alt="Prompt Compiler UI" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop'"></div>
-			</div>
-		</div>
-	</div>
+<section class="case-section wrap" id="what" aria-labelledby="what-title">
+<div class="section-head"><div><p class="section-label">What it does</p><h2 id="what-title">Clearer instructions, fewer surprises.</h2></div><p>For people who hand work to AI models and coding agents, and want to see the plan and the risks first.</p></div>
+<div class="case-grid">
+<article class="case-card"><span class="label">Compile</span><h3>Structure the request</h3><p>Type a feature idea, bug report or research question. Get a system prompt, a user prompt, an execution plan and an expanded prompt that is ready to paste into any model.</p></article>
+<article class="case-card"><span class="label">Check</span><h3>See the risk first</h3><p>A policy layer sets a risk level, an execution mode, data sensitivity and allowed tools. A readiness check then says whether the prompt is ready to run under that policy.</p></article>
+<article class="case-card"><span class="label">Review</span><h3>Decide on a pull request</h3><p>Paste a pull request’s title, description and changed files. PR Safety answers merge, hold, split or rebase, and shows the signals behind the answer. It advises and never blocks a merge.</p></article>
+</div>
 </section>
 
-<!-- FEATURES -->
-<section id="features" class="features">
-	<div class="features-in">
-		<div class="sec-tag">Engine Specs</div>
-		<h2 class="sec-title">Engineered for Efficiency.</h2>
-		<p class="sec-desc">Everything you need to manipulate context windows, optimize token usage, and run heuristic processing locally without unnecessary API calls.</p>
-
-		<div class="bento">
-			<!-- Token Optimizer (2x2) -->
-			<div class="bc c2x2 sr">
-				<div class="feat-img"><img src="../assets/comp2 token optimizer.PNG" alt="Token Optimizer Engine" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
-				<div class="chip chip-g"><svg style="width:10px;height:10px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Compress</div>
-				<h4>Token Optimizer</h4>
-				<p>Reduce LLM costs without losing meaning. Set your max token limit and let our compression algorithm distill your verbose prompts into hyper-efficient queries.</p>
-			</div>
-
-			<!-- Browser Integration (2x1) -->
-			<div class="bc c2x1 sr">
-				<h4>Seamless Integration</h4>
-				<p>Optimize right where you type. A native 'Optimize' button integrates directly into your favorite AI chat interfaces like ChatGPT.</p>
-			</div>
-
-			<!-- Context Manager (1x1) -->
-			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-				<h4>Context Manager</h4>
-				<p>Ingest local files and folders effortlessly for built-in RAG workflows.</p>
-			</div>
-
-			<!-- Live Sync (1x1) -->
-			<div class="bc sr">
-				<svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-				<h4>Live Sync</h4>
-				<p>Real-time prompt compilation and status checking directly from the UI.</p>
-			</div>
-
-			<!-- Offline Heuristics (4x1 with side image) -->
-			<div class="bc c4x1 sr">
-				<div class="feat-text">
-					<div class="chip chip-s"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#94A3B8;margin-right:2px"></span> Offline Mode</div>
-					<h4>Offline Heuristic Engine</h4>
-					<p>Why send data out when you can process it locally? Fast, local heuristic compilation without making a single LLM call. Keep your data private and your latency at zero.</p>
-				</div>
-				<div class="feat-side"><img src="../assets/comp3 offline heuristics.PNG" alt="Offline Heuristic Engine" onerror="this.src='https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=800&auto=format&fit=crop'"></div>
-			</div>
-		</div>
-	</div>
+<section class="case-section wrap" id="how" aria-labelledby="how-title">
+<div class="section-head"><div><p class="section-label">How it works</p><h2 id="how-title">One engine, several outputs.</h2></div><p>Every output is generated from the same structured description of the request.</p></div>
+<ol class="steps">
+<li><h3>Read the request</h3><p>Offline heuristics work out what is being asked, in which domain, and which cues suggest risk. Conservative mode, on by default, keeps the output grounded in what you actually wrote.</p></li>
+<li><h3>Describe it once</h3><p>The result becomes an intermediate representation with steps, constraints and policy fields. The prompts, the plan and the checks are all generated from it.</p></li>
+<li><h3>Plan the steps</h3><p>Coordinated tasks are split into ordered steps. Steps can be tagged <code>explore</code>, <code>decide</code>, <code>execute</code> or <code>verify</code> to tell an agent how much freedom to take; a clear, simple request gains no extra text.</p></li>
+<li><h3>Check readiness</h3><p>The policy layer and the readiness check flag risky requests before anything runs downstream.</p></li>
+<li><h3>Enrich, optionally</h3><p>When enabled, a server-side model call through OpenRouter can enrich the result. If that call fails, the compiler falls back to the offline output.</p></li>
+</ol>
 </section>
 
-<!-- CTA -->
-<section id="about" class="cta-section">
-	<svg class="icon-big" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-	<h3>Built for Developers, by a Developer.</h3>
-	<p>I'm Mehmet, a Data Science & AI student. I built Compiler because working with LLM APIs shouldn't cost a fortune in wasted tokens. It's open-source, fast, and runs perfectly on your local machine.</p>
-	<div class="cta-links">
-		<a href="https://github.com/madara88645/Compiler" target="_blank">
-			<svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482z" clip-rule="evenodd"/></svg>
-			Follow on GitHub
-		</a>
-	</div>
+<section class="case-section wrap" id="built" aria-labelledby="built-title">
+<div class="built"><div><p class="section-label">What I built</p><h2 id="built-title">Decisions worth a closer look.</h2><p class="case-lead">Prompt Compiler is a personal project, built with the help of AI coding assistants. These are the parts I would walk a reviewer through first.</p></div>
+<ul class="points">
+<li><b>An offline, deterministic core.</b> Compiling needs no API key and no network, which keeps results repeatable and easy to test.</li>
+<li><b>Regression gates around it.</b> A large pytest suite, including dedicated gate tests, keeps the core’s behaviour from drifting as features are added.</li>
+<li><b>PR Safety.</b> An offline merge-readiness advisor with a web view, a <code>promptc pr-safety --from-git</code> command-line mode and a Markdown report to paste into the pull request.</li>
+<li><b>One engine, several surfaces.</b> A FastAPI backend, a Next.js web app, a Chrome extension on the Chrome Web Store and a VS Code extension packaged by CI, not yet on the Marketplace.</li>
+<li><b>Grounded by default.</b> Missing information leads to a clarifying question rather than invented libraries or requirements.</li>
+</ul></div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer"><div class="footer-in">
-	<div class="footer-logo">
-		<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-		Compiler
-	</div>
-	<div class="footer-copy">© 2026 Mehmet Ozel. Open source.</div>
-</div></footer>
-
-<script>
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.06});
-document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
-</script>
-</body>
-</html>
+<section class="case-section wrap" id="stack" aria-labelledby="stack-title">
+<div class="section-head"><div><p class="section-label">Stack</p><h2 id="stack-title">Built with.</h2></div></div>
+<ul class="stack stack-lg" aria-label="Technologies used"><li>Python</li><li>FastAPI</li><li>Next.js</li><li>React</li><li>TypeScript</li><li>SQLite (FTS5)</li><li>pytest</li><li>Vitest</li><li>Chrome extension</li><li>VS Code extension</li><li>OpenRouter (optional)</li></ul>
+<p class="case-note">Limits worth knowing: PR Safety only looks at what you paste. It does not call the GitHub API or any model, and its verdict is advice for the person reviewing, not a gate.</p>
+<div class="case-links"><a class="button" href="https://prcompiler.com">Open Prompt Compiler <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/madara88645/Compiler">Source on GitHub <span aria-hidden="true">↗</span></a><a class="text-link" href="../#products">All projects <span aria-hidden="true">←</span></a></div>
+</section>
+</main>
+<footer class="wrap"><div><h2>Something worth exploring?</h2><a class="contact-link" href="mailto:mehmet.ozel2701@gmail.com">Let's talk <span aria-hidden="true">↗</span></a></div><div class="footer-bottom"><span>© 2026 Mehmet Özel</span><div><a href="../">Portfolio</a><a href="../cv/">CV</a><a href="https://github.com/madara88645">GitHub</a><a href="https://www.linkedin.com/in/mehmet-ozel-695227300">LinkedIn</a></div><a href="#main">Back to top ↑</a></div></footer>
+</body></html>
