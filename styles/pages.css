@@ -35,12 +35,11 @@
 /* Research: link row inside the SpacingLab card. */
 .spacing-study .study-bottom{padding-top:22px;color:#aebcd0}
 
-/* VibeGraph feature: a real screenshot framed like the hero window, beside what was built. */
-.vibe-feature{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center;margin-top:38px;padding:36px;background:#151b25;border:1px solid #344055;border-radius:16px}
-.vibe-shot{display:block;margin:0;overflow:hidden;border:1px solid #313846;border-radius:12px;background:#0f141c;box-shadow:0 20px 55px #0005;transition:border-color .3s}
-.vibe-shot:hover{border-color:#647da6;text-decoration:none}
-.vibe-shot img{display:block;width:100%;height:auto;aspect-ratio:1280/840;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-.vibe-shot:hover img{transform:scale(1.02)}
+/* VibeGraph feature: what was built, then a full-width explainer film cut from real vibegraph.dev footage. */
+.vibe-feature{display:grid;grid-template-columns:1fr 1fr;gap:28px 48px;align-items:start;margin-top:38px;padding:36px;background:#151b25;border:1px solid #344055;border-radius:16px}
+.vibe-detail .points{margin-top:6px}
+.vibe-film{grid-column:1/-1;display:block;width:100%;height:auto;aspect-ratio:16/9;background:#060b09;border:1px solid #313846;border-radius:12px;box-shadow:0 20px 55px #0005}
+.vibe-foot{grid-column:1/-1;display:flex;justify-content:space-between;gap:15px;margin-top:-6px;color:#aebdd5;font-size:12px}
 .vibe-feature .stack{margin-top:22px}
 .button:hover>span.go{transform:translateX(3px)}
 .vibe-feature h3{font-size:43px;letter-spacing:-1.3px}
@@ -181,6 +180,7 @@
 .work-index small{font-size:12px}
 .vibe-feature{padding:20px;margin-top:30px}
 .vibe-feature h3{font-size:37px}
+.vibe-foot{display:grid;grid-template-columns:1fr 1fr}
 .timeline li{grid-template-columns:1fr;gap:6px}
 .creds{grid-template-columns:1fr}
 .cv-hero{padding-block:48px 40px}
@@ -198,7 +198,7 @@
 }
 
 /* Keyboard focus for every interactive control, not only links. */
-.button:focus-visible,button:focus-visible,.cv-chip:focus-visible,.vibe-shot:focus-visible{outline:3px solid #94afe2;outline-offset:4px}
+.button:focus-visible,button:focus-visible,.cv-chip:focus-visible{outline:3px solid #94afe2;outline-offset:4px}
 
 @media print{
 .skip,.site-header nav,.header-actions,.reading-progress,footer .footer-bottom>a{display:none!important}
